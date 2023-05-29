@@ -1,9 +1,17 @@
-# Fabric Example Mod
+# Repeating Mod (Fabric)
 
-## Setup
+This mod can record your movements and play them back.
 
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
+![Preview gif](gif.gif)
 
-## License
+## Controls
 
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+```
+Menu              |  J            
+Toggle recording  |  not specified
+Toggle replay     |  not specified
+```
+
+## Menu
+
+![Repeating menu](https://github.com/MeexReay/repeating-mod/assets/127148610/da923fe5-d44d-421b-b601-2a65cb5543eb)
