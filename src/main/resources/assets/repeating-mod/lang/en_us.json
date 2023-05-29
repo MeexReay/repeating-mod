@@ -1,0 +1,26 @@
+{
+  "key.repeating-mod.menu": "Repeating menu",
+  "key.repeating-mod.toggle_replay": "Toggle replay",
+  "key.repeating-mod.toggle_record": "Toggle recording",
+
+  "text.repeating-mod.name": "Repeating Mod",
+  "text.repeating-mod.record": "record",
+  "text.repeating-mod.replay": "replay",
+  "text.repeating-mod.start": "Start",
+  "text.repeating-mod.stop": "Stop",
+  "text.repeating-mod.export": "Export record",
+  "text.repeating-mod.import": "Import record",
+  "text.repeating-mod.basic": "Basic mode",
+  "text.repeating-mod.parkour": "Parkour mode",
+  "text.repeating-mod.settings": "Settings",
+  "text.repeating-mod.dev": "In development...",
+  "text.repeating-mod.block_limit": "Block limit: %s",
+  "text.repeating-mod.block_limit_tooltip": "Two recording events will\nbe summed up if the\ndistance between them is\nless than the limit.",
+  "text.repeating-mod.time_limit": "Time limit: %s ms",
+  "text.repeating-mod.time_limit_tooltip": "Two recording events will\nbe summed up if the time\nbetween them is less than\nthe limit.",
+
+  "message.repeating-mod.replay_start": "Replay started",
+  "message.repeating-mod.replay_stop": "Replay finished",
+  "message.repeating-mod.record_start": "Record started",
+  "message.repeating-mod.record_stop": "Record finished"
+}

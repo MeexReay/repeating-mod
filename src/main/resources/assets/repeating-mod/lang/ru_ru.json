@@ -1,0 +1,27 @@
+{
+  "key.repeating-mod.menu": "Меню репитинга",
+  "key.repeating-mod.toggle_replay": "Вкл/выкл повтор",
+  "key.repeating-mod.toggle_record": "Вкл/выкл запись",
+
+  "text.repeating-mod.name": "Репитинг Мод",
+  "text.repeating-mod.record": "запись",
+  "text.repeating-mod.replay": "повтор",
+  "text.repeating-mod.start": "Начать",
+  "text.repeating-mod.stop": "Остановить",
+  "text.repeating-mod.export": "Экспорт записи",
+  "text.repeating-mod.import": "Импорт записи",
+  "text.repeating-mod.basic": "Обычный режим",
+  "text.repeating-mod.parkour": "Режим паркура",
+  "text.repeating-mod.settings": "Настройки",
+  "text.repeating-mod.dev": "В разработке...",
+  "text.repeating-mod.block_limit": "Лимит блоков: %s",
+  "text.repeating-mod.block_limit_tooltip": "Два ивента записи будут\nсуммироваться, если\nрасстояние между ними\nменьше лимита.",
+  "text.repeating-mod.time_limit": "Лимит времени: %s мс",
+  "text.repeating-mod.time_limit_tooltip": "Два ивента записи будут\nсуммироваться, если время\nмежду ними меньше лимита.",
+
+  "message.repeating-mod.replay_start": "Повтор начат",
+  "message.repeating-mod.replay_stop": "Повтор закончен",
+  "message.repeating-mod.record_start": "Запись начата",
+  "message.repeating-mod.record_stop": "Запись закончена"
+}
+
