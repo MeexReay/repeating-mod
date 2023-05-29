@@ -57,7 +57,7 @@ public class RepeatingScreen extends BaseOwoScreen<FlowLayout> {
         rootComponent
                 .surface(Surface.VANILLA_TRANSLUCENT)
                 .horizontalAlignment(HorizontalAlignment.CENTER)
-                .verticalAlignment(VerticalAlignment.CENTER);
+                .verticalAlignment(VerticalAlignment.TOP);
 
         replay_btn = (ButtonComponent) Components.button(Text.of("replay"),
                 (ButtonComponent btn) -> {
