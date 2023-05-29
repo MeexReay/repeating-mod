@@ -2,7 +2,7 @@
 
 This mod can record your movements and play them back.
 
-![Preview gif](gif.gif)
+![Preview gif](preview.gif)
 
 ## Controls
 
