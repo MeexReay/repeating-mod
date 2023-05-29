@@ -65,7 +65,7 @@ public class RepeatingMod implements ClientModInitializer {
 		Map<String,Object> def = new HashMap<>();
 		def.put("record_blocks_limit", record_blocks_limit);
 		def.put("record_time_limit", record_time_limit);
-		conf = new EasyConfig(new File(loader.getConfigDir().toFile(),"repeating-mod").toPath(),def);
+		conf = new EasyConfig(new File(loader.getConfigDir().toFile(),"repeating-mod.json").toPath(),def);
 
 		record_blocks_limit = (double) conf.data.get("record_blocks_limit");
 		record_time_limit = (long) conf.data.get("record_time_limit");
