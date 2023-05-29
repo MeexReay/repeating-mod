@@ -1,0 +1,17 @@
+{
+  "providers": [
+    {
+      "file":"repeating-mod:ui/no-loop.png",
+      "chars":["\ueffe"],
+      "height":16,
+      "ascent":12,
+      "type":"bitmap"
+    },{
+      "file":"repeating-mod:ui/loop.png",
+      "chars":["\uefff"],
+      "height":16,
+      "ascent":12,
+      "type":"bitmap"
+    }
+  ]
+}
