@@ -1,7 +1,6 @@
 package themixray.repeating.mod;
 
-import org.json.simple.parser.*;
-import org.json.simple.*;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,11 +13,13 @@ public class EasyConfig {
     public final Path path;
     public final File file;
     public Map<String,Object> data;
+    private Yaml yaml;
 
     public EasyConfig(Path path, Map<String,Object> def) {
         this.path = path;
         this.file = path.toFile();
         this.data = new HashMap<>();
+        this.yaml = new Yaml();
         
         if (!file.exists()) {
             try {
@@ -43,12 +44,12 @@ public class EasyConfig {
         write(data);
     }
 
-    private String toJson(Map<String,Object> p) {
-        return JSONValue.toJSONString(p);
+    private String toYaml(Map<String,Object> p) {
+        return yaml.dump(p);
     }
 
     private Map<String,Object> toMap(String j) {
-        return (Map<String, Object>) JSONValue.parse(j);
+        return yaml.load(j);
     }
 
     private Map<String,Object> read() {
@@ -62,7 +63,7 @@ public class EasyConfig {
 
     private void write(Map<String,Object> p) {
         try {
-            Files.write(path,toJson(p).getBytes());
+            Files.write(path, toYaml(p).getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }

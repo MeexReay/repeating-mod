@@ -65,10 +65,10 @@ public class RepeatingMod implements ClientModInitializer {
 		Map<String,Object> def = new HashMap<>();
 		def.put("record_blocks_limit", record_blocks_limit);
 		def.put("record_time_limit", record_time_limit);
-		conf = new EasyConfig(new File(loader.getConfigDir().toFile(),"repeating-mod.json").toPath(),def);
+		conf = new EasyConfig(new File(loader.getConfigDir().toFile(),"repeating-mod.yml").toPath(),def);
 
 		record_blocks_limit = (double) conf.data.get("record_blocks_limit");
-		record_time_limit = (long) conf.data.get("record_time_limit");
+		record_time_limit = (Integer) conf.data.get("record_time_limit");
 
 		menu_key = KeyBindingHelper.registerKeyBinding(new KeyBinding(
 			"key.repeating-mod.menu",InputUtil.Type.KEYSYM,
