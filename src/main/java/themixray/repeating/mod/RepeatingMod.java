@@ -122,6 +122,82 @@ public class RepeatingMod implements ClientModInitializer {
 		last_record = now;
 	}
 
+	public void recordAllInput() {
+		RecordInputEvent l = ((RecordInputEvent)getLastRecord("input"));
+		if (l == null) {
+			RecordInputEvent e = new RecordInputEvent(
+				client.player.input.sneaking,
+				client.player.input.jumping,
+				client.player.input.movementSideways,
+				client.player.input.movementForward,
+				client.player.input.pressingForward,
+				client.player.input.pressingBack,
+				client.player.input.pressingLeft,
+				client.player.input.pressingRight,
+				client.player.getHeadYaw(),
+				client.player.getBodyYaw(),
+				client.player.getPitch(),
+				client.player.isSprinting(),
+				client.player.getYaw());
+			recordTick(e);
+		} else {
+			RecordInputEvent e = new RecordInputEvent(
+				((Boolean) client.player.input.sneaking == l.sneaking) ? null : client.player.input.sneaking,
+				((Boolean) client.player.input.jumping == l.jumping) ? null : client.player.input.jumping,
+				(((Float) client.player.input.movementSideways).equals(l.movementSideways)) ? null : client.player.input.movementSideways,
+				(((Float) client.player.input.movementForward).equals(l.movementForward)) ? null : client.player.input.movementForward,
+				((Boolean) client.player.input.pressingForward == l.pressingForward) ? null : client.player.input.pressingForward,
+				((Boolean) client.player.input.pressingBack == l.pressingBack) ? null : client.player.input.pressingBack,
+				((Boolean) client.player.input.pressingLeft == l.pressingLeft) ? null : client.player.input.pressingLeft,
+				((Boolean) client.player.input.pressingRight == l.pressingRight) ? null : client.player.input.pressingRight,
+				client.player.getHeadYaw(),RepeatingMod.client.player.getBodyYaw(),client.player.getPitch(),
+				((Boolean) client.player.isSprinting() == l.sprinting) ? null : client.player.isSprinting(),
+				client.player.getYaw());
+
+			if (!(e.isEmpty() &&
+					e.yaw == l.yaw &&
+					e.head_yaw == l.head_yaw &&
+					e.pitch == l.pitch &&
+					e.body_yaw == l.body_yaw)) {
+				e.fillEmpty(l);
+				recordTick(e);
+			}
+		}
+	}
+
+	public void recordCameraInput() {
+		RecordInputEvent l = ((RecordInputEvent)getLastRecord("input"));
+		if (l == null) {
+			RecordInputEvent e = new RecordInputEvent(
+					client.player.input.sneaking,
+					client.player.input.jumping,
+					client.player.input.movementSideways,
+					client.player.input.movementForward,
+					client.player.input.pressingForward,
+					client.player.input.pressingBack,
+					client.player.input.pressingLeft,
+					client.player.input.pressingRight,
+					client.player.getHeadYaw(),
+					client.player.getBodyYaw(),
+					client.player.getPitch(),
+					client.player.isSprinting(),
+					client.player.getYaw());
+			recordTick(e);
+		} else {
+			RecordInputEvent e = new RecordInputEvent(null,null,null,null,
+				null,null,null,null,client.player.getHeadYaw(),
+				RepeatingMod.client.player.getBodyYaw(),client.player.getPitch(),null,client.player.getYaw());
+
+			if (!(e.yaw == l.yaw &&
+					e.head_yaw == l.head_yaw &&
+					e.pitch == l.pitch &&
+					e.body_yaw == l.body_yaw)) {
+				e.fillEmpty(l);
+				recordTick(e);
+			}
+		}
+	}
+
 	public void stopRecording() {
 		is_recording = false;
 		menu.update_btns();
@@ -323,6 +399,18 @@ public class RepeatingMod implements ClientModInitializer {
 			this.yaw = yaw;
 		}
 
+		public void fillEmpty(RecordInputEvent e) {
+			if (sneaking == null) sneaking = e.sneaking;
+			if (jumping == null) jumping = e.jumping;
+			if (movementSideways == null) movementSideways = e.movementSideways;
+			if (movementForward == null) movementForward = e.movementForward;
+			if (pressingForward == null) pressingForward = e.pressingForward;
+			if (pressingBack == null) pressingBack = e.pressingBack;
+			if (pressingLeft == null) pressingLeft = e.pressingLeft;
+			if (pressingRight == null) pressingRight = e.pressingRight;
+			if (sprinting == null) sprinting = e.sprinting;
+		}
+
 		public boolean isEmpty() {
 			return sneaking == null &&
 				jumping == null &&
@@ -340,19 +428,32 @@ public class RepeatingMod implements ClientModInitializer {
 		}
 
 		public void inputCallback() {
-			if (sneaking != null) if (client.player.input.sneaking != sneaking) client.player.input.sneaking = sneaking;
-			if (jumping != null) if (client.player.input.jumping != jumping) client.player.input.jumping = jumping;
-			if (movementSideways != null) if (client.player.input.movementSideways != movementSideways) client.player.input.movementSideways = movementSideways;
-			if (movementForward != null) if (client.player.input.movementForward != movementForward) client.player.input.movementForward = movementForward;
-			if (pressingForward != null) if (client.player.input.pressingForward != pressingForward) client.player.input.pressingForward = pressingForward;
-			if (pressingBack != null) if (client.player.input.pressingBack != pressingBack) client.player.input.pressingBack = pressingBack;
-			if (pressingLeft != null) if (client.player.input.pressingLeft != pressingLeft) client.player.input.pressingLeft = pressingLeft;
-			if (pressingRight != null) if (client.player.input.pressingRight != pressingRight) client.player.input.pressingRight = pressingRight;
-			if (sprinting != null) if (client.player.isSprinting() != sprinting) client.player.setSprinting(sprinting);
-			if (client.player.getYaw() != yaw) client.player.setYaw(yaw);
-			if (client.player.getHeadYaw() != head_yaw) client.player.setHeadYaw(head_yaw);
-			if (client.player.getBodyYaw() != body_yaw) client.player.setBodyYaw(body_yaw);
-			if (client.player.getPitch() != pitch) client.player.setPitch(pitch);
+			if (sprinting != null && client.player.isSprinting() != sprinting)
+				client.player.setSprinting(sprinting);
+			if (client.player.getYaw() != yaw)
+				client.player.setYaw(yaw);
+			if (client.player.getHeadYaw() != head_yaw)
+				client.player.setHeadYaw(head_yaw);
+			if (client.player.getBodyYaw() != body_yaw)
+				client.player.setBodyYaw(body_yaw);
+			if (client.player.getPitch() != pitch)
+				client.player.setPitch(pitch);
+			if (sneaking != null && client.player.input.sneaking != sneaking)
+				client.player.input.sneaking = sneaking;
+			if (jumping != null && client.player.input.jumping != jumping)
+				client.player.input.jumping = jumping;
+			if (movementSideways != null && client.player.input.movementSideways != movementSideways)
+				client.player.input.movementSideways = movementSideways;
+			if (movementForward != null && client.player.input.movementForward != movementForward)
+				client.player.input.movementForward = movementForward;
+			if (pressingForward != null && client.player.input.pressingForward != pressingForward)
+				client.player.input.pressingForward = pressingForward;
+			if (pressingBack != null && client.player.input.pressingBack != pressingBack)
+				client.player.input.pressingBack = pressingBack;
+			if (pressingLeft != null && client.player.input.pressingLeft != pressingLeft)
+				client.player.input.pressingLeft = pressingLeft;
+			if (pressingRight != null && client.player.input.pressingRight != pressingRight)
+				client.player.input.pressingRight = pressingRight;
 		}
 
 		public String toText() {
@@ -366,7 +467,7 @@ public class RepeatingMod implements ClientModInitializer {
 				((pressingLeft==null)?"n":(pressingLeft?"1":"0"))+"&"+
 				((pressingRight==null)?"n":(pressingRight?"1":"0"))+"&"+
 				head_yaw+"&"+body_yaw+"&"+ pitch +"&"+
-				((sprinting==null)?"n":(sprinting?"1":"0"));
+				((sprinting==null)?"n":(sprinting?"1":"0")+"&"+ yaw);
 		}
 		public String getType() {
 			return "input";

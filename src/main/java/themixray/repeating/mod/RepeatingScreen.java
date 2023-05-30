@@ -43,7 +43,7 @@ public class RepeatingScreen extends BaseOwoScreen<FlowLayout> {
         rootComponent
                 .surface(Surface.VANILLA_TRANSLUCENT)
                 .horizontalAlignment(HorizontalAlignment.CENTER)
-                .verticalAlignment(VerticalAlignment.TOP);
+                .verticalAlignment(VerticalAlignment.CENTER);
 
         replay_btn = (ButtonComponent) Components.button(Text.of("replay"),
                 (ButtonComponent btn) -> {
@@ -75,69 +75,70 @@ public class RepeatingScreen extends BaseOwoScreen<FlowLayout> {
                 Sizing.fixed(120),Sizing.fixed(20));
 
         rootComponent.child(
-            Containers.verticalFlow(Sizing.content(), Sizing.content())
-                .child(Containers.verticalFlow(Sizing.content(), Sizing.content())
-                    .child(Components.label(Text.translatable("text.repeating-mod.basic")).margins(Insets.of(1)))
-                    .padding(Insets.of(5))
-                    .surface(Surface.DARK_PANEL)
-                    .verticalAlignment(VerticalAlignment.CENTER)
-                    .horizontalAlignment(HorizontalAlignment.CENTER)
-                    .margins(Insets.of(1)))
-                .child(Containers.verticalFlow(Sizing.content(), Sizing.content())
-                    .child(Containers.horizontalFlow(Sizing.content(), Sizing.content())
-                            .child(replay_btn).child(loop_btn))
-                    .child(record_btn)
-                    .child(Components.button(Text.translatable(
-                        "text.repeating-mod.export"),
-                        (ButtonComponent btn) -> {
-                            String t = "";
-                            for (int i = 0; i < mod.record.size(); i++) {
-                                t += mod.record.get(i).toText();
-                                if (i != mod.record.size()-1)
-                                    t += ";";
-                            }
-
-                            File p = new File(FabricLoader.getInstance().getGameDir().toFile(),"repeating");
-                            if (!p.exists()) p.mkdir();
-                            File file = new File(p,"export.txt");
-
-                            try {
-                                if (!file.exists()) file.createNewFile();
-                                Files.write(file.toPath(), t.getBytes());
-                                Runtime.getRuntime().exec("explorer /select,\""+file.getAbsolutePath()+"\"");
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }).margins(Insets.of(10,1,1,1)).sizing(
-                        Sizing.fixed(120),Sizing.fixed(20)))
-                    .child(Components.button(Text.translatable(
-                        "text.repeating-mod.import"),
-                        (ButtonComponent btn) -> {
-                            mod.record.clear();
-
-                            File p = new File(FabricLoader.getInstance().getGameDir().toFile(),"repeating");
-                            if (!p.exists()) p.mkdir();
-                            File file = new File(p,"import.txt");
-
-                            try {
-                                if (!file.exists()) {
-                                    file.createNewFile();
-                                    Runtime.getRuntime().exec("explorer /select,\""+file.getAbsolutePath()+"\"");
-                                    return;
+            Containers.horizontalFlow(Sizing.content(), Sizing.content()).child(
+                Containers.verticalFlow(Sizing.content(), Sizing.content())
+                    .child(Containers.verticalFlow(Sizing.content(), Sizing.content())
+                        .child(Components.label(Text.translatable("text.repeating-mod.basic")).margins(Insets.of(1)))
+                        .padding(Insets.of(5))
+                        .surface(Surface.DARK_PANEL)
+                        .verticalAlignment(VerticalAlignment.CENTER)
+                        .horizontalAlignment(HorizontalAlignment.CENTER)
+                        .margins(Insets.of(1)))
+                    .child(Containers.verticalFlow(Sizing.content(), Sizing.content())
+                        .child(Containers.horizontalFlow(Sizing.content(), Sizing.content())
+                                .child(replay_btn).child(loop_btn))
+                        .child(record_btn)
+                        .child(Components.button(Text.translatable(
+                            "text.repeating-mod.export"),
+                            (ButtonComponent btn) -> {
+                                String t = "";
+                                for (int i = 0; i < mod.record.size(); i++) {
+                                    t += mod.record.get(i).toText();
+                                    if (i != mod.record.size()-1)
+                                        t += "\n";
                                 }
-                                String t = Files.readString(file.toPath());
-                                for (String s:t.split(";"))
-                                    mod.record.add(RepeatingMod.RecordEvent.fromText(s));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }).margins(Insets.of(1)).sizing(
-                        Sizing.fixed(120),Sizing.fixed(20)))
-                    .padding(Insets.of(10))
-                    .surface(Surface.DARK_PANEL)
-                    .verticalAlignment(VerticalAlignment.CENTER)
-                    .horizontalAlignment(HorizontalAlignment.CENTER)
-                    .margins(Insets.of(1)))
+
+                                File p = new File(FabricLoader.getInstance().getGameDir().toFile(),"repeating");
+                                if (!p.exists()) p.mkdir();
+                                File file = new File(p,"export.txt");
+
+                                try {
+                                    if (!file.exists()) file.createNewFile();
+                                    Files.write(file.toPath(), t.getBytes());
+                                    Runtime.getRuntime().exec("explorer /select,\""+file.getAbsolutePath()+"\"");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }).margins(Insets.of(10,1,1,1)).sizing(
+                            Sizing.fixed(120),Sizing.fixed(20)))
+                        .child(Components.button(Text.translatable(
+                            "text.repeating-mod.import"),
+                            (ButtonComponent btn) -> {
+                                mod.record.clear();
+
+                                File p = new File(FabricLoader.getInstance().getGameDir().toFile(),"repeating");
+                                if (!p.exists()) p.mkdir();
+                                File file = new File(p,"import.txt");
+
+                                try {
+                                    if (!file.exists()) {
+                                        file.createNewFile();
+                                        Runtime.getRuntime().exec("explorer /select,\""+file.getAbsolutePath()+"\"");
+                                        return;
+                                    }
+                                    String t = Files.readString(file.toPath());
+                                    for (String s:t.split("\n"))
+                                        mod.record.add(RepeatingMod.RecordEvent.fromText(s));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }).margins(Insets.of(1)).sizing(
+                            Sizing.fixed(120),Sizing.fixed(20)))
+                        .padding(Insets.of(10))
+                        .surface(Surface.DARK_PANEL)
+                        .verticalAlignment(VerticalAlignment.CENTER)
+                        .horizontalAlignment(HorizontalAlignment.CENTER)
+                        .margins(Insets.of(1)))
         /*).child(
             Containers.verticalFlow(Sizing.content(), Sizing.content())
                 .child(Containers.verticalFlow(Sizing.content(), Sizing.content())
@@ -153,8 +154,8 @@ public class RepeatingScreen extends BaseOwoScreen<FlowLayout> {
                     .surface(Surface.DARK_PANEL)
                     .verticalAlignment(VerticalAlignment.CENTER)
                     .horizontalAlignment(HorizontalAlignment.CENTER)
-                    .margins(Insets.of(1)))
-        ).child(
+                    .margins(Insets.of(1)))*/
+        /*).child(
             Containers.verticalFlow(Sizing.content(), Sizing.content())
                 .child(Containers.verticalFlow(Sizing.content(), Sizing.content())
                     .child(Components.label(Text.translatable("text.repeating-mod.settings")).margins(Insets.of(1)))
@@ -190,8 +191,8 @@ public class RepeatingScreen extends BaseOwoScreen<FlowLayout> {
                     .surface(Surface.DARK_PANEL)
                     .verticalAlignment(VerticalAlignment.CENTER)
                     .horizontalAlignment(HorizontalAlignment.CENTER)
-                    .margins(Insets.of(1)))*/
-        );
+                    .margins(Insets.of(1)))
+        )*/));
         update_btns();
     }
 }

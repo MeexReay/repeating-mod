@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Repeating Mod",
-  "description": "Mod that repeats your actions. ",
+  "description": "Mod that repeats your recorded actions. ",
   "authors": [
     "TheMixRay"
   ],
