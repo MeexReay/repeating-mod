@@ -108,18 +108,20 @@ public class RepeatingMod implements ClientModInitializer {
 		menu.update_btns();
 		record.clear();
 
-		move_tick = new Thread(() -> {
-			while (is_recording) {
-				record.add(new RecordMoveEvent(client.player.getPos(),
-					client.player.getHeadYaw(),client.player.getPitch()));
-				try {
-					Thread.sleep(record_pos_delay);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+		if (record_pos_delay != -1) {
+			move_tick = new Thread(() -> {
+				while (is_recording) {
+					record.add(new RecordMoveEvent(client.player.getPos(),
+							client.player.getHeadYaw(), client.player.getPitch()));
+					try {
+						Thread.sleep(record_pos_delay);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
-			}
-		});
-		move_tick.start();
+			});
+			move_tick.start();
+		}
 
 		sendMessage(Text.translatable("message.repeating-mod.record_start"));
 	}
