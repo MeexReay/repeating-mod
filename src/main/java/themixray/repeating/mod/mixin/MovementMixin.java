@@ -88,11 +88,12 @@ public abstract class MovementMixin {
 		}
 	}
 
-	@Inject(at = @At(value = "INVOKE"), method = "setSprinting", cancellable = true)
+	@Inject(at = @At(value = "HEAD"), method = "setSprinting", cancellable = true)
 	private void onSprint(boolean sprinting,CallbackInfo ci) {
 		if (RepeatingMod.me.is_replaying) {
 			if (RepeatingMod.input_replay != null &&
-				RepeatingMod.input_replay.sprinting != sprinting) {
+					RepeatingMod.input_replay.sprinting != null &&
+					RepeatingMod.input_replay.sprinting != sprinting) {
 				ci.cancel();
 			}
 		}
