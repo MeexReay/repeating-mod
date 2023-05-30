@@ -14,10 +14,9 @@
   "text.repeating-mod.parkour": "Parkour mode",
   "text.repeating-mod.settings": "Settings",
   "text.repeating-mod.dev": "In development...",
-  "text.repeating-mod.block_limit": "Block limit: %s",
-  "text.repeating-mod.block_limit_tooltip": "Two recording events will\nbe summed up if the\ndistance between them is\nless than the limit.",
-  "text.repeating-mod.time_limit": "Time limit: %s ms",
-  "text.repeating-mod.time_limit_tooltip": "Two recording events will\nbe summed up if the time\nbetween them is less than\nthe limit.",
+  "text.repeating-mod.nan_pos_delay": "No pos delay",
+  "text.repeating-mod.pos_delay": "Pos delay: %s ms",
+  "text.repeating-mod.pos_delay_text": "Delay after which the pos event is added",
 
   "message.repeating-mod.replay_start": "Replay started",
   "message.repeating-mod.replay_stop": "Replay finished",

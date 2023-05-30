@@ -29,7 +29,14 @@ public class EasyConfig {
                 e.printStackTrace();
             }
         }
+
         reload();
+
+        for (Map.Entry<String,Object> m:def.entrySet())
+            if (!data.containsKey(m.getKey()))
+                data.put(m.getKey(),m.getValue());
+
+        save();
     }
     public EasyConfig(Path f, Map<String,Object> def) {
         this(f.toFile(),def);

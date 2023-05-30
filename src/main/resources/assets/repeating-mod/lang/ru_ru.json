@@ -14,10 +14,9 @@
   "text.repeating-mod.parkour": "Режим паркура",
   "text.repeating-mod.settings": "Настройки",
   "text.repeating-mod.dev": "В разработке...",
-  "text.repeating-mod.block_limit": "Лимит блоков: %s",
-  "text.repeating-mod.block_limit_tooltip": "Два ивента записи будут\nсуммироваться, если\nрасстояние между ними\nменьше лимита.",
-  "text.repeating-mod.time_limit": "Лимит времени: %s мс",
-  "text.repeating-mod.time_limit_tooltip": "Два ивента записи будут\nсуммироваться, если время\nмежду ними меньше лимита.",
+  "text.repeating-mod.nan_pos_delay": "Задержки позиции нету",
+  "text.repeating-mod.pos_delay": "Задержка позиции: %s мс",
+  "text.repeating-mod.pos_delay_text": "Задержка, после которой добавляется ивент позиции",
 
   "message.repeating-mod.replay_start": "Повтор начат",
   "message.repeating-mod.replay_stop": "Повтор закончен",

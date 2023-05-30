@@ -155,7 +155,7 @@ public class RepeatingScreen extends BaseOwoScreen<FlowLayout> {
                     .verticalAlignment(VerticalAlignment.CENTER)
                     .horizontalAlignment(HorizontalAlignment.CENTER)
                     .margins(Insets.of(1)))*/
-        /*).child(
+        ).child(
             Containers.verticalFlow(Sizing.content(), Sizing.content())
                 .child(Containers.verticalFlow(Sizing.content(), Sizing.content())
                     .child(Components.label(Text.translatable("text.repeating-mod.settings")).margins(Insets.of(1)))
@@ -165,34 +165,24 @@ public class RepeatingScreen extends BaseOwoScreen<FlowLayout> {
                     .horizontalAlignment(HorizontalAlignment.CENTER)
                     .margins(Insets.of(1)))
                 .child(Containers.verticalFlow(Sizing.content(), Sizing.content())
-                    .child(Components.discreteSlider(Sizing.fixed(120),0,5)
-                        .decimalPlaces(2)
-                        .setFromDiscreteValue(mod.record_blocks_limit)
+                    .child(Components.discreteSlider(Sizing.fixed(120),-24,5000)
+                        .setFromDiscreteValue(mod.record_pos_delay)
                         .message((String s)->{
-                            mod.record_blocks_limit = Double.parseDouble(s.replace(",","."));
-                            mod.conf.data.put("record_blocks_limit",mod.record_blocks_limit);
+                            mod.record_pos_delay = Long.parseLong(s);
+                            mod.conf.data.put("record_pos_delay",mod.record_pos_delay);
                             mod.conf.save();
-                            return Text.translatable("text.repeating-mod.block_limit",s);
-                        }).scrollStep(0.2)
+                            if (mod.record_pos_delay > -1)
+                                return Text.translatable("text.repeating-mod.pos_delay", s);
+                            return Text.translatable("text.repeating-mod.nan_pos_delay", s);
+                        }).scrollStep(25)
                         .margins(Insets.of(1))
-                        .tooltip(Text.translatable("text.repeating-mod.block_limit_tooltip")))
-                    .child(Components.discreteSlider(Sizing.fixed(120),0,1000)
-                        .decimalPlaces(0)
-                        .setFromDiscreteValue(mod.record_time_limit)
-                        .message((String s)->{
-                            mod.record_time_limit = (long) Double.parseDouble(s.replace(",","."));
-                            mod.conf.data.put("record_time_limit",mod.record_time_limit);
-                            mod.conf.save();
-                            return Text.translatable("text.repeating-mod.time_limit",s);
-                        }).scrollStep(2)
-                        .margins(Insets.of(1))
-                        .tooltip(Text.translatable("text.repeating-mod.time_limit_tooltip")))
+                        .tooltip(Text.translatable("text.repeating-mod.pos_delay_text")))
                     .padding(Insets.of(10))
                     .surface(Surface.DARK_PANEL)
                     .verticalAlignment(VerticalAlignment.CENTER)
                     .horizontalAlignment(HorizontalAlignment.CENTER)
                     .margins(Insets.of(1)))
-        )*/));
+        ));
         update_btns();
     }
 }

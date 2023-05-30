@@ -28,6 +28,7 @@ public class RepeatingMod implements ClientModInitializer {
 	public static final FabricLoader loader = FabricLoader.getInstance();
 	public static RepeatingMod me;
 
+	public Thread move_tick = null;
 	public List<RecordEvent> record = new ArrayList<>();
 	public boolean is_recording = false;
 	public Date last_record = null;
@@ -42,8 +43,7 @@ public class RepeatingMod implements ClientModInitializer {
 	private static KeyBinding toggle_replay_key;
 	private static KeyBinding toggle_record_key;
 
-	public double record_blocks_limit = 2;
-	public long record_time_limit = 50;
+	public long record_pos_delay = 1000;
 
 	public EasyConfig conf;
 
@@ -53,12 +53,11 @@ public class RepeatingMod implements ClientModInitializer {
 		me = this;
 
 		Map<String,Object> def = new HashMap<>();
-		def.put("record_blocks_limit", record_blocks_limit);
-		def.put("record_time_limit", record_time_limit);
-		conf = new EasyConfig(new File(loader.getConfigDir().toFile(),"repeating-mod.yml").toPath(),def);
+		def.put("record_pos_delay", (int) record_pos_delay);
 
-		record_blocks_limit = (double) conf.data.get("record_blocks_limit");
-		record_time_limit = (Integer) conf.data.get("record_time_limit");
+		conf = new EasyConfig(loader.getConfigDir(),"repeating-mod.yml",def);
+
+		record_pos_delay = (Integer) conf.data.get("record_pos_delay");
 
 		menu_key = KeyBindingHelper.registerKeyBinding(new KeyBinding(
 			"key.repeating-mod.menu",InputUtil.Type.KEYSYM,
@@ -108,7 +107,20 @@ public class RepeatingMod implements ClientModInitializer {
 		is_recording = true;
 		menu.update_btns();
 		record.clear();
-		record.add(new RecordMoveEvent(client.player.getPos(),client.player.getHeadYaw(),client.player.getPitch()));
+
+		move_tick = new Thread(() -> {
+			while (is_recording) {
+				record.add(new RecordMoveEvent(client.player.getPos(),
+					client.player.getHeadYaw(),client.player.getPitch()));
+				try {
+					Thread.sleep(record_pos_delay);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		move_tick.start();
+
 		sendMessage(Text.translatable("message.repeating-mod.record_start"));
 	}
 
@@ -200,6 +212,7 @@ public class RepeatingMod implements ClientModInitializer {
 
 	public void stopRecording() {
 		is_recording = false;
+		move_tick = null;
 		menu.update_btns();
 		last_record = null;
 		sendMessage(Text.translatable("message.repeating-mod.record_stop"));
@@ -228,6 +241,7 @@ public class RepeatingMod implements ClientModInitializer {
 	public void stopReplay() {
 		is_recording = false;
 		is_replaying = false;
+		replay = null;
 		menu.update_btns();
 		sendMessage(Text.translatable("message.repeating-mod.replay_stop"));
 	}
