@@ -6,26 +6,12 @@ import io.wispforest.owo.ui.container.*;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
 import io.wispforest.owo.ui.core.Insets;
-import io.wispforest.owo.util.EventSource;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceType;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
-import java.nio.file.Path;
 
 public class RepeatingScreen extends BaseOwoScreen<FlowLayout> {
     public RepeatingMod mod;
@@ -49,7 +35,7 @@ public class RepeatingScreen extends BaseOwoScreen<FlowLayout> {
         record_btn.setMessage(Text.translatable("text.repeating-mod." +
             ((mod.is_recording) ? "stop" : "start")).append(" ")
             .append(Text.translatable("text.repeating-mod.record")));
-        loop_btn.setMessage(Text.of(((mod.loop_replay) ? "\uefff" : "\ueffe")));
+        loop_btn.setMessage(Text.of(((mod.loop_replay) ? "\uefff " : "\ueffe ")));
     }
 
     @Override
@@ -167,7 +153,7 @@ public class RepeatingScreen extends BaseOwoScreen<FlowLayout> {
                     .surface(Surface.DARK_PANEL)
                     .verticalAlignment(VerticalAlignment.CENTER)
                     .horizontalAlignment(HorizontalAlignment.CENTER)
-                    .margins(Insets.of(1)))*/
+                    .margins(Insets.of(1)))
         ).child(
             Containers.verticalFlow(Sizing.content(), Sizing.content())
                 .child(Containers.verticalFlow(Sizing.content(), Sizing.content())
@@ -204,7 +190,7 @@ public class RepeatingScreen extends BaseOwoScreen<FlowLayout> {
                     .surface(Surface.DARK_PANEL)
                     .verticalAlignment(VerticalAlignment.CENTER)
                     .horizontalAlignment(HorizontalAlignment.CENTER)
-                    .margins(Insets.of(1)))
+                    .margins(Insets.of(1)))*/
         );
         update_btns();
     }

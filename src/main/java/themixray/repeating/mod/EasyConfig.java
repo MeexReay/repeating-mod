@@ -15,9 +15,9 @@ public class EasyConfig {
     public Map<String,Object> data;
     private Yaml yaml;
 
-    public EasyConfig(Path path, Map<String,Object> def) {
-        this.path = path;
-        this.file = path.toFile();
+    public EasyConfig(File f, Map<String,Object> def) {
+        this.path = f.toPath();
+        this.file = f;
         this.data = new HashMap<>();
         this.yaml = new Yaml();
         
@@ -31,15 +31,38 @@ public class EasyConfig {
         }
         reload();
     }
+    public EasyConfig(Path f, Map<String,Object> def) {
+        this(f.toFile(),def);
+    }
+    public EasyConfig(String parent,String child,Map<String,Object> def) {
+        this(new File(parent,child),def);
+    }
+    public EasyConfig(File parent,String child,Map<String,Object> def) {
+        this(new File(parent,child),def);
+    }
+    public EasyConfig(Path parent,String child,Map<String,Object> def) {
+        this(new File(parent.toFile(),child),def);
+    }
 
+    public EasyConfig(File f) {
+        this(f,new HashMap<>());
+    }
     public EasyConfig(Path path) {
-        this(path,new HashMap<>());
+        this(path.toFile(),new HashMap<>());
+    }
+    public EasyConfig(String parent,String child) {
+        this(new File(parent,child),new HashMap<>());
+    }
+    public EasyConfig(File parent,String child) {
+        this(new File(parent,child),new HashMap<>());
+    }
+    public EasyConfig(Path parent,String child) {
+        this(new File(parent.toFile(),child),new HashMap<>());
     }
 
     public void reload() {
         data = read();
     }
-    
     public void save() {
         write(data);
     }
@@ -47,9 +70,8 @@ public class EasyConfig {
     private String toYaml(Map<String,Object> p) {
         return yaml.dump(p);
     }
-
     private Map<String,Object> toMap(String j) {
-        return yaml.load(j);
+        return (Map<String, Object>) yaml.load(j);
     }
 
     private Map<String,Object> read() {
@@ -60,7 +82,6 @@ public class EasyConfig {
         }
         return new HashMap<>();
     }
-
     private void write(Map<String,Object> p) {
         try {
             Files.write(path, toYaml(p).getBytes());

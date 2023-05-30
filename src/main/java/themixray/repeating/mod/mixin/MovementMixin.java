@@ -43,50 +43,58 @@ public abstract class MovementMixin {
 		});
 	}
 
-	@Inject(at = @At(value = "HEAD"), method = "move")
-	private void onMove(MovementType movementType, Vec3d vec, CallbackInfo ci) {
+	@Inject(at = @At(value = "HEAD"), method = "tickMovement")
+	private void onMove(CallbackInfo ci) {
 		if (RepeatingMod.me.is_recording) {
-			if (vec != lastVec) {
-				double dist = 0;
-				if (lastVec != null)
-					dist = vec.distanceTo(lastVec);
-				if (dist > 0.0) {
-					Vec3d c = client.player.getPos();
+			RepeatingMod.RecordInputEvent l = ((RepeatingMod.RecordInputEvent)RepeatingMod.me.getLastRecord("input"));
+			if (l == null) {
+				RepeatingMod.RecordInputEvent e = new RepeatingMod.RecordInputEvent(
+						RepeatingMod.client.player.input.sneaking,
+						RepeatingMod.client.player.input.jumping,
+						RepeatingMod.client.player.input.movementSideways,
+						RepeatingMod.client.player.input.movementForward,
+						RepeatingMod.client.player.input.pressingForward,
+						RepeatingMod.client.player.input.pressingBack,
+						RepeatingMod.client.player.input.pressingLeft,
+						RepeatingMod.client.player.input.pressingRight,
+						RepeatingMod.client.player.getHeadYaw(),
+						RepeatingMod.client.player.getBodyYaw(),
+						RepeatingMod.client.player.getPitch(),
+						RepeatingMod.client.player.isSprinting(),
+						RepeatingMod.client.player.getYaw());
+				RepeatingMod.me.recordTick(e);
+			} else {
+				RepeatingMod.RecordInputEvent e = new RepeatingMod.RecordInputEvent(
+						((Boolean) RepeatingMod.client.player.input.sneaking == l.sneaking) ? null : RepeatingMod.client.player.input.sneaking,
+						((Boolean) RepeatingMod.client.player.input.jumping == l.jumping) ? null : RepeatingMod.client.player.input.jumping,
+						(((Float) RepeatingMod.client.player.input.movementSideways).equals(l.movementSideways)) ? null : RepeatingMod.client.player.input.movementSideways,
+						(((Float) RepeatingMod.client.player.input.movementForward).equals(l.movementForward)) ? null : RepeatingMod.client.player.input.movementForward,
+						((Boolean) RepeatingMod.client.player.input.pressingForward == l.pressingForward) ? null : RepeatingMod.client.player.input.pressingForward,
+						((Boolean) RepeatingMod.client.player.input.pressingBack == l.pressingBack) ? null : RepeatingMod.client.player.input.pressingBack,
+						((Boolean) RepeatingMod.client.player.input.pressingLeft == l.pressingLeft) ? null : RepeatingMod.client.player.input.pressingLeft,
+						((Boolean) RepeatingMod.client.player.input.pressingRight == l.pressingRight) ? null : RepeatingMod.client.player.input.pressingRight,
+						RepeatingMod.client.player.getHeadYaw(),RepeatingMod.client.player.getBodyYaw(),RepeatingMod.client.player.getPitch(),
+						((Boolean) RepeatingMod.client.player.isSprinting() == l.sprinting) ? null : RepeatingMod.client.player.isSprinting(),
+						RepeatingMod.client.player.getYaw());
 
-					RepeatingMod.RecordMoveEvent ev = new RepeatingMod.RecordMoveEvent(
-							new Vec3d(c.getX() + vec.getX(),
-									c.getY() + vec.getY(),
-									c.getZ() + vec.getZ()),
-							lastYaw, lastPitch);
-
-					boolean just_add = true;
-					Date now = new Date();
-					if (RepeatingMod.me.last_record != null) {
-						long diff = now.getTime() - RepeatingMod.me.last_record.getTime();
-						boolean add_delay = true;
-						if (diff > 0) {
-							RepeatingMod.RecordEvent last_ev = RepeatingMod.me.record.get(RepeatingMod.me.record.size()-1);
-							if (last_ev instanceof RepeatingMod.RecordMoveEvent) {
-								RepeatingMod.RecordMoveEvent last_ev1 = (RepeatingMod.RecordMoveEvent) last_ev;
-								if (last_ev1.vec.distanceTo(ev.vec) < RepeatingMod.me.record_blocks_limit &&
-										diff < RepeatingMod.me.record_time_limit) {
-									just_add = false;
-									add_delay = false;
-									last_ev1.vec = ev.vec;
-								}
-							}
-						}
-						if (add_delay) {
-							RepeatingMod.me.record.add(new RepeatingMod.RecordDelayEvent(diff));
-						}
-					}
-					if (just_add) {
-						RepeatingMod.me.record.add(ev);
-						RepeatingMod.me.last_record = now;
-					}
+				if (!(e.isEmpty() &&
+						e.yaw == l.yaw &&
+						e.head_yaw == l.head_yaw &&
+						e.pitch == l.pitch &&
+						e.body_yaw == l.body_yaw)) {
+					RepeatingMod.me.recordTick(e);
 				}
 			}
-			lastVec = vec;
+		}
+	}
+
+	@Inject(at = @At(value = "INVOKE"), method = "setSprinting", cancellable = true)
+	private void onSprint(boolean sprinting,CallbackInfo ci) {
+		if (RepeatingMod.me.is_replaying) {
+			if (RepeatingMod.input_replay != null &&
+				RepeatingMod.input_replay.sprinting != sprinting) {
+				ci.cancel();
+			}
 		}
 	}
 }

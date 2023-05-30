@@ -4,22 +4,13 @@ import com.google.common.collect.Lists;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.MovementType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.resource.Resource;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -29,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.*;
 
 public class RepeatingMod implements ClientModInitializer {
@@ -45,7 +35,7 @@ public class RepeatingMod implements ClientModInitializer {
 	public Thread replay = null;
 	public boolean is_replaying = false;
 	public boolean loop_replay = false;
-	public static boolean replay_sneaking = false;
+	public static RecordInputEvent input_replay = null;
 
 	public static RepeatingScreen menu;
 	private static KeyBinding menu_key;
@@ -118,6 +108,7 @@ public class RepeatingMod implements ClientModInitializer {
 		is_recording = true;
 		menu.update_btns();
 		record.clear();
+		record.add(new RecordMoveEvent(client.player.getPos(),client.player.getHeadYaw(),client.player.getPitch()));
 		sendMessage(Text.translatable("message.repeating-mod.record_start"));
 	}
 
@@ -143,12 +134,13 @@ public class RepeatingMod implements ClientModInitializer {
 		is_recording = false;
 		is_replaying = true;
 		menu.update_btns();
-		client.player.setNoGravity(true);
 		replay = new Thread(() -> {
 			while (true) {
-				for (RecordEvent e : record)
-					if (is_replaying)
+				for (RecordEvent e : record) {
+					if (is_replaying) {
 						e.callback();
+					}
+				}
 				if (!loop_replay || !is_replaying) break;
 			}
 			stopReplay();
@@ -161,7 +153,6 @@ public class RepeatingMod implements ClientModInitializer {
 		is_recording = false;
 		is_replaying = false;
 		menu.update_btns();
-		client.player.setNoGravity(false);
 		sendMessage(Text.translatable("message.repeating-mod.replay_stop"));
 	}
 
@@ -196,9 +187,20 @@ public class RepeatingMod implements ClientModInitializer {
 							Double.parseDouble(args[2])),
 						Float.parseFloat(args[3]),
 						Float.parseFloat(args[4]));
-				} else if (type.equals("s")) {
-					return new RecordSneakEvent(
-						args[0].equals("1"));
+				} else if (type.equals("p")) {
+					return new RecordInputEvent(
+						(args[0].equals("n")?null:args[0].equals("1")),
+						(args[1].equals("n")?null:args[1].equals("1")),
+						(args[2].equals("n")?null:Float.parseFloat(args[2])),
+						(args[3].equals("n")?null:Float.parseFloat(args[3])),
+						(args[4].equals("n")?null:args[4].equals("1")),
+						(args[5].equals("n")?null:args[5].equals("1")),
+						(args[6].equals("n")?null:args[6].equals("1")),
+						(args[7].equals("n")?null:args[7].equals("1")),
+						Float.parseFloat(args[8]),Float.parseFloat(args[9]),
+						Float.parseFloat(args[10]),
+						(args[11].equals("n")?null:args[11].equals("1")),
+						Float.parseFloat(args[12]));
 				} else if (type.equals("b")) {
 					return new RecordBlockBreakEvent(new BlockPos(
 							Integer.parseInt(args[0]),
@@ -275,22 +277,99 @@ public class RepeatingMod implements ClientModInitializer {
 		}
 	}
 
-	public static class RecordSneakEvent extends RecordEvent {
-		public boolean sneaking;
+	public static class RecordInputEvent extends RecordEvent {
+		public Boolean sneaking;
+		public Boolean jumping;
+		public Boolean pressingForward;
+		public Boolean pressingBack;
+		public Boolean pressingLeft;
+		public Boolean pressingRight;
+		public Boolean sprinting;
 
-		public RecordSneakEvent(boolean sneaking) {
+		public Float movementSideways;
+		public Float movementForward;
+
+		public float yaw;
+		public float head_yaw;
+		public float body_yaw;
+		public float pitch;
+
+
+		public RecordInputEvent(Boolean sneaking,
+								Boolean jumping,
+								Float movementSideways,
+								Float movementForward,
+								Boolean pressingForward,
+								Boolean pressingBack,
+								Boolean pressingLeft,
+								Boolean pressingRight,
+								float head_yaw,
+								float body_yaw,
+								float head_pitch,
+								Boolean sprinting,
+								float yaw) {
 			this.sneaking = sneaking;
+			this.jumping = jumping;
+			this.movementSideways = movementSideways;
+			this.movementForward = movementForward;
+			this.pressingForward = pressingForward;
+			this.pressingBack = pressingBack;
+			this.pressingLeft = pressingLeft;
+			this.pressingRight = pressingRight;
+			this.head_yaw = head_yaw;
+			this.body_yaw = body_yaw;
+			this.pitch = head_pitch;
+			this.sprinting = sprinting;
+			this.yaw = yaw;
+		}
+
+		public boolean isEmpty() {
+			return sneaking == null &&
+				jumping == null &&
+				movementSideways == null &&
+				movementForward == null &&
+				pressingForward == null &&
+				pressingBack == null &&
+				pressingLeft == null &&
+				pressingRight == null &&
+				sprinting == null;
 		}
 
 		public void callback() {
-			RepeatingMod.replay_sneaking = sneaking;
+			input_replay = this;
+		}
+
+		public void inputCallback() {
+			if (sneaking != null) if (client.player.input.sneaking != sneaking) client.player.input.sneaking = sneaking;
+			if (jumping != null) if (client.player.input.jumping != jumping) client.player.input.jumping = jumping;
+			if (movementSideways != null) if (client.player.input.movementSideways != movementSideways) client.player.input.movementSideways = movementSideways;
+			if (movementForward != null) if (client.player.input.movementForward != movementForward) client.player.input.movementForward = movementForward;
+			if (pressingForward != null) if (client.player.input.pressingForward != pressingForward) client.player.input.pressingForward = pressingForward;
+			if (pressingBack != null) if (client.player.input.pressingBack != pressingBack) client.player.input.pressingBack = pressingBack;
+			if (pressingLeft != null) if (client.player.input.pressingLeft != pressingLeft) client.player.input.pressingLeft = pressingLeft;
+			if (pressingRight != null) if (client.player.input.pressingRight != pressingRight) client.player.input.pressingRight = pressingRight;
+			if (sprinting != null) if (client.player.isSprinting() != sprinting) client.player.setSprinting(sprinting);
+			if (client.player.getYaw() != yaw) client.player.setYaw(yaw);
+			if (client.player.getHeadYaw() != head_yaw) client.player.setHeadYaw(head_yaw);
+			if (client.player.getBodyYaw() != body_yaw) client.player.setBodyYaw(body_yaw);
+			if (client.player.getPitch() != pitch) client.player.setPitch(pitch);
 		}
 
 		public String toText() {
-			return "s="+(sneaking?"1":"0");
+			return "p="+
+				((sneaking==null)?"n":(sneaking?"1":"0"))+"&"+
+				((jumping==null)?"n":(jumping?"1":"0"))+"&"+
+				((movementSideways==null)?"n":movementSideways)+"&"+
+				((movementForward==null)?"n":movementForward)+"&"+
+				((pressingForward==null)?"n":(pressingForward?"1":"0"))+"&"+
+				((pressingBack==null)?"n":(pressingBack?"1":"0"))+"&"+
+				((pressingLeft==null)?"n":(pressingLeft?"1":"0"))+"&"+
+				((pressingRight==null)?"n":(pressingRight?"1":"0"))+"&"+
+				head_yaw+"&"+body_yaw+"&"+ pitch +"&"+
+				((sprinting==null)?"n":(sprinting?"1":"0"));
 		}
 		public String getType() {
-			return "sneak";
+			return "input";
 		}
 	}
 
