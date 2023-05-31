@@ -52,12 +52,12 @@ public class RepeatingMod implements ClientModInitializer {
 		LOGGER.info("Repeating mod initialized");
 		me = this;
 
-		Map<String,Object> def = new HashMap<>();
-		def.put("record_pos_delay", (int) record_pos_delay);
+		Map<String,String> def = new HashMap<>();
+		def.put("record_pos_delay", String.valueOf(record_pos_delay));
 
-		conf = new EasyConfig(loader.getConfigDir(),"repeating-mod.yml",def);
+		conf = new EasyConfig(loader.getConfigDir(),"repeating-mod",def);
 
-		record_pos_delay = (Integer) conf.data.get("record_pos_delay");
+		record_pos_delay = Long.parseLong(conf.data.get("record_pos_delay"));
 
 		menu_key = KeyBindingHelper.registerKeyBinding(new KeyBinding(
 			"key.repeating-mod.menu",InputUtil.Type.KEYSYM,
@@ -71,9 +71,8 @@ public class RepeatingMod implements ClientModInitializer {
 
 		menu = new RepeatingScreen();
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			if (menu_key.wasPressed()) {
+			if (menu_key.wasPressed())
 				client.setScreen(menu);
-			}
 			if (toggle_replay_key.wasPressed()) {
 				if (!is_recording) {
 					if (is_replaying)
@@ -108,16 +107,19 @@ public class RepeatingMod implements ClientModInitializer {
 		menu.update_btns();
 		record.clear();
 
-		if (record_pos_delay != -1) {
+		record.add(new RecordMoveEvent(client.player.getPos(),
+				client.player.getHeadYaw(), client.player.getPitch()));
+
+		if (record_pos_delay > 0) {
 			move_tick = new Thread(() -> {
 				while (is_recording) {
-					record.add(new RecordMoveEvent(client.player.getPos(),
-							client.player.getHeadYaw(), client.player.getPitch()));
 					try {
 						Thread.sleep(record_pos_delay);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
+					record.add(new RecordMoveEvent(client.player.getPos(),
+							client.player.getHeadYaw(), client.player.getPitch()));
 				}
 			});
 			move_tick.start();
@@ -152,7 +154,8 @@ public class RepeatingMod implements ClientModInitializer {
 				client.player.getBodyYaw(),
 				client.player.getPitch(),
 				client.player.isSprinting(),
-				client.player.getYaw());
+				client.player.getYaw(),
+				client.player.getMovementSpeed());
 			recordTick(e);
 		} else {
 			RecordInputEvent e = new RecordInputEvent(
@@ -166,7 +169,7 @@ public class RepeatingMod implements ClientModInitializer {
 				((Boolean) client.player.input.pressingRight == l.pressingRight) ? null : client.player.input.pressingRight,
 				client.player.getHeadYaw(),RepeatingMod.client.player.getBodyYaw(),client.player.getPitch(),
 				((Boolean) client.player.isSprinting() == l.sprinting) ? null : client.player.isSprinting(),
-				client.player.getYaw());
+				client.player.getYaw(),client.player.getMovementSpeed());
 
 			if (!(e.isEmpty() &&
 					e.yaw == l.yaw &&
@@ -195,12 +198,14 @@ public class RepeatingMod implements ClientModInitializer {
 					client.player.getBodyYaw(),
 					client.player.getPitch(),
 					client.player.isSprinting(),
-					client.player.getYaw());
+					client.player.getYaw(),
+					client.player.getMovementSpeed());
 			recordTick(e);
 		} else {
-			RecordInputEvent e = new RecordInputEvent(null,null,null,null,
-				null,null,null,null,client.player.getHeadYaw(),
-				RepeatingMod.client.player.getBodyYaw(),client.player.getPitch(),null,client.player.getYaw());
+			RecordInputEvent e = new RecordInputEvent(null,null,null,
+					null,null,null,null,null,
+					client.player.getHeadYaw(),RepeatingMod.client.player.getBodyYaw(),client.player.getPitch(),
+					null,client.player.getYaw(),client.player.getMovementSpeed());
 
 			if (!(e.yaw == l.yaw &&
 					e.head_yaw == l.head_yaw &&
@@ -270,47 +275,15 @@ public class RepeatingMod implements ClientModInitializer {
 				String type = String.valueOf(t.charAt(0));
 				String[] args = t.substring(2).split("&");
 				if (type.equals("d")) {
-					return new RecordDelayEvent(
-						Long.parseLong(args[0]));
+					return RecordDelayEvent.fromArgs(args);
 				} else if (type.equals("m")) {
-					return new RecordMoveEvent(new Vec3d(
-							Double.parseDouble(args[0]),
-							Double.parseDouble(args[1]),
-							Double.parseDouble(args[2])),
-						Float.parseFloat(args[3]),
-						Float.parseFloat(args[4]));
+					return RecordMoveEvent.fromArgs(args);
 				} else if (type.equals("p")) {
-					return new RecordInputEvent(
-						(args[0].equals("n")?null:args[0].equals("1")),
-						(args[1].equals("n")?null:args[1].equals("1")),
-						(args[2].equals("n")?null:Float.parseFloat(args[2])),
-						(args[3].equals("n")?null:Float.parseFloat(args[3])),
-						(args[4].equals("n")?null:args[4].equals("1")),
-						(args[5].equals("n")?null:args[5].equals("1")),
-						(args[6].equals("n")?null:args[6].equals("1")),
-						(args[7].equals("n")?null:args[7].equals("1")),
-						Float.parseFloat(args[8]),Float.parseFloat(args[9]),
-						Float.parseFloat(args[10]),
-						(args[11].equals("n")?null:args[11].equals("1")),
-						Float.parseFloat(args[12]));
+					return RecordInputEvent.fromArgs(args);
 				} else if (type.equals("b")) {
-					return new RecordBlockBreakEvent(new BlockPos(
-							Integer.parseInt(args[0]),
-							Integer.parseInt(args[1]),
-							Integer.parseInt(args[2])));
+					return RecordBlockBreakEvent.fromArgs(args);
 				} else if (type.equals("i")) {
-					return new RecordBlockInteractEvent(
-							Hand.valueOf(args[5]),
-							new BlockHitResult(new Vec3d(
-									Double.parseDouble(args[0]),
-									Double.parseDouble(args[1]),
-									Double.parseDouble(args[2])),
-								Direction.byId(Integer.parseInt(args[4])),
-								new BlockPos(
-									Integer.parseInt(args[0]),
-									Integer.parseInt(args[1]),
-									Integer.parseInt(args[2])),
-								args[3].equals("1")));
+					return RecordBlockInteractEvent.fromArgs(args);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -321,6 +294,10 @@ public class RepeatingMod implements ClientModInitializer {
 
 	public static class RecordDelayEvent extends RecordEvent {
 		public long delay;
+
+		public static RecordDelayEvent fromArgs(String[] a) {
+			return new RecordDelayEvent(Long.parseLong(a[0]));
+		}
 
 		public RecordDelayEvent(long delay) {
 			this.delay = delay;
@@ -346,6 +323,15 @@ public class RepeatingMod implements ClientModInitializer {
 		public Vec3d vec;
 		public float yaw;
 		public float pitch;
+
+		public static RecordMoveEvent fromArgs(String[] a) {
+			return new RecordMoveEvent(new Vec3d(
+					Double.parseDouble(a[0]),
+					Double.parseDouble(a[1]),
+					Double.parseDouble(a[2])),
+					Float.parseFloat(a[3]),
+					Float.parseFloat(a[4]));
+		}
 
 		public RecordMoveEvent(Vec3d vec,float yaw,float pitch) {
 			this.vec = vec;
@@ -385,7 +371,24 @@ public class RepeatingMod implements ClientModInitializer {
 		public float head_yaw;
 		public float body_yaw;
 		public float pitch;
+		public float speed;
 
+		public static RecordInputEvent fromArgs(String[] a) {
+			return new RecordInputEvent(
+					(a[0].equals("n")?null:a[0].equals("1")),
+					(a[1].equals("n")?null:a[1].equals("1")),
+					(a[2].equals("n")?null:Float.parseFloat(a[2])),
+					(a[3].equals("n")?null:Float.parseFloat(a[3])),
+					(a[4].equals("n")?null:a[4].equals("1")),
+					(a[5].equals("n")?null:a[5].equals("1")),
+					(a[6].equals("n")?null:a[6].equals("1")),
+					(a[7].equals("n")?null:a[7].equals("1")),
+					Float.parseFloat(a[8]),Float.parseFloat(a[9]),
+					Float.parseFloat(a[10]),
+					(a[11].equals("n")?null:a[11].equals("1")),
+					Float.parseFloat(a[12]),
+					Float.parseFloat(a[13]));
+		}
 
 		public RecordInputEvent(Boolean sneaking,
 								Boolean jumping,
@@ -399,7 +402,8 @@ public class RepeatingMod implements ClientModInitializer {
 								float body_yaw,
 								float head_pitch,
 								Boolean sprinting,
-								float yaw) {
+								float yaw,
+								float speed) {
 			this.sneaking = sneaking;
 			this.jumping = jumping;
 			this.movementSideways = movementSideways;
@@ -413,6 +417,7 @@ public class RepeatingMod implements ClientModInitializer {
 			this.pitch = head_pitch;
 			this.sprinting = sprinting;
 			this.yaw = yaw;
+			this.speed = speed;
 		}
 
 		public void fillEmpty(RecordInputEvent e) {
@@ -454,6 +459,8 @@ public class RepeatingMod implements ClientModInitializer {
 				client.player.setBodyYaw(body_yaw);
 			if (client.player.getPitch() != pitch)
 				client.player.setPitch(pitch);
+			if (client.player.getMovementSpeed() != speed)
+				client.player.setMovementSpeed(speed);
 			if (sneaking != null && client.player.input.sneaking != sneaking)
 				client.player.input.sneaking = sneaking;
 			if (jumping != null && client.player.input.jumping != jumping)
@@ -483,8 +490,10 @@ public class RepeatingMod implements ClientModInitializer {
 				((pressingLeft==null)?"n":(pressingLeft?"1":"0"))+"&"+
 				((pressingRight==null)?"n":(pressingRight?"1":"0"))+"&"+
 				head_yaw+"&"+body_yaw+"&"+ pitch +"&"+
-				((sprinting==null)?"n":(sprinting?"1":"0")+"&"+ yaw);
+				((sprinting==null)?"n":(sprinting?"1":"0")+
+				"&"+yaw+"&"+speed);
 		}
+
 		public String getType() {
 			return "input";
 		}
@@ -492,6 +501,13 @@ public class RepeatingMod implements ClientModInitializer {
 
 	public static class RecordBlockBreakEvent extends RecordEvent {
 		public BlockPos pos;
+
+		public static RecordBlockBreakEvent fromArgs(String[] a) {
+			return new RecordBlockBreakEvent(new BlockPos(
+					Integer.parseInt(a[0]),
+					Integer.parseInt(a[1]),
+					Integer.parseInt(a[2])));
+		}
 
 		public RecordBlockBreakEvent(
 				BlockPos pos) {
@@ -513,6 +529,21 @@ public class RepeatingMod implements ClientModInitializer {
 	public static class RecordBlockInteractEvent extends RecordEvent {
 		public Hand hand;
 		public BlockHitResult hitResult;
+
+		public static RecordBlockInteractEvent fromArgs(String[] a) {
+			return new RecordBlockInteractEvent(
+					Hand.valueOf(a[5]),
+					new BlockHitResult(new Vec3d(
+							Double.parseDouble(a[0]),
+							Double.parseDouble(a[1]),
+							Double.parseDouble(a[2])),
+							Direction.byId(Integer.parseInt(a[4])),
+							new BlockPos(
+									Integer.parseInt(a[0]),
+									Integer.parseInt(a[1]),
+									Integer.parseInt(a[2])),
+							a[3].equals("1")));
+		}
 
 		public RecordBlockInteractEvent(Hand hand, BlockHitResult hitResult) {
 			this.hand = hand;

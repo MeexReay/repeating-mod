@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import themixray.repeating.mod.RepeatingMod;
+import themixray.repeating.mod.TickTask;
 
 @Mixin(ClientPlayerEntity.class)
 public abstract class MovementMixin {
@@ -27,6 +28,20 @@ public abstract class MovementMixin {
 					RepeatingMod.me.recordTick(new RepeatingMod.RecordBlockInteractEvent(hand,hitResult));
 			return ActionResult.PASS;
 		});
+	}
+
+	@Inject(at = @At(value = "HEAD"), method = "tick")
+	private void onTickHead(CallbackInfo ci) {
+		for (TickTask t:TickTask.ticks)
+			if (t.getAt() == TickTask.TickAt.HEAD)
+				t.tick();
+	}
+
+	@Inject(at = @At(value = "TAIL"), method = "tick")
+	private void onTickTail(CallbackInfo ci) {
+		for (TickTask t:TickTask.ticks)
+			if (t.getAt() == TickTask.TickAt.TAIL)
+				t.tick();
 	}
 
 	@Inject(at = @At(value = "HEAD"), method = "tickMovement")

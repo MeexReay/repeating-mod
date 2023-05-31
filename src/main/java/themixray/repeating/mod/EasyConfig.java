@@ -1,7 +1,5 @@
 package themixray.repeating.mod;
 
-import org.yaml.snakeyaml.Yaml;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,14 +10,12 @@ import java.io.File;
 public class EasyConfig {
     public final Path path;
     public final File file;
-    public Map<String,Object> data;
-    private Yaml yaml;
+    public Map<String,String> data;
 
-    public EasyConfig(File f, Map<String,Object> def) {
+    public EasyConfig(File f, Map<String,String> def) {
         this.path = f.toPath();
         this.file = f;
         this.data = new HashMap<>();
-        this.yaml = new Yaml();
         
         if (!file.exists()) {
             try {
@@ -32,22 +28,22 @@ public class EasyConfig {
 
         reload();
 
-        for (Map.Entry<String,Object> m:def.entrySet())
+        for (Map.Entry<String,String> m:def.entrySet())
             if (!data.containsKey(m.getKey()))
                 data.put(m.getKey(),m.getValue());
 
         save();
     }
-    public EasyConfig(Path f, Map<String,Object> def) {
+    public EasyConfig(Path f, Map<String,String> def) {
         this(f.toFile(),def);
     }
-    public EasyConfig(String parent,String child,Map<String,Object> def) {
+    public EasyConfig(String parent,String child,Map<String,String> def) {
         this(new File(parent,child),def);
     }
-    public EasyConfig(File parent,String child,Map<String,Object> def) {
+    public EasyConfig(File parent,String child,Map<String,String> def) {
         this(new File(parent,child),def);
     }
-    public EasyConfig(Path parent,String child,Map<String,Object> def) {
+    public EasyConfig(Path parent,String child,Map<String,String> def) {
         this(new File(parent.toFile(),child),def);
     }
 
@@ -74,14 +70,22 @@ public class EasyConfig {
         write(data);
     }
 
-    private String toYaml(Map<String,Object> p) {
-        return yaml.dump(p);
+    private String toText(Map<String,String> p) {
+        String t = "";
+        for (Map.Entry<String,String> e:p.entrySet())
+            t += e.getKey() + "=" + e.getValue() + "\n";
+        return t;
     }
-    private Map<String,Object> toMap(String j) {
-        return (Map<String, Object>) yaml.load(j);
+    private Map<String,String> toMap(String j) {
+        Map<String,String> m = new HashMap<>();
+        for (String l:j.split("\n")) {
+            String s[] = l.split("=");
+            m.put(s[0],s[1]);
+        }
+        return m;
     }
 
-    private Map<String,Object> read() {
+    private Map<String,String> read() {
         try {
             return toMap(Files.readString(path));
         } catch (IOException e) {
@@ -89,9 +93,9 @@ public class EasyConfig {
         }
         return new HashMap<>();
     }
-    private void write(Map<String,Object> p) {
+    private void write(Map<String,String> p) {
         try {
-            Files.write(path, toYaml(p).getBytes());
+            Files.write(path, toText(p).getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }

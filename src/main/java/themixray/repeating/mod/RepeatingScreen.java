@@ -18,6 +18,7 @@ public class RepeatingScreen extends BaseOwoScreen<FlowLayout> {
     public ButtonComponent replay_btn;
     public ButtonComponent record_btn;
     public ButtonComponent loop_btn;
+    public boolean was_build = false;
 
     public RepeatingScreen() {
         this.mod = RepeatingMod.me;
@@ -29,13 +30,15 @@ public class RepeatingScreen extends BaseOwoScreen<FlowLayout> {
     }
 
     public void update_btns() {
-        replay_btn.setMessage(Text.translatable("text.repeating-mod." +
-            ((mod.is_replaying) ? "stop" : "start")).append(" ")
-            .append(Text.translatable("text.repeating-mod.replay")));
-        record_btn.setMessage(Text.translatable("text.repeating-mod." +
-            ((mod.is_recording) ? "stop" : "start")).append(" ")
-            .append(Text.translatable("text.repeating-mod.record")));
-        loop_btn.setMessage(Text.of(((mod.loop_replay) ? "\uefff " : "\ueffe ")));
+        if (was_build) {
+            replay_btn.setMessage(Text.translatable("text.repeating-mod." +
+                            ((mod.is_replaying) ? "stop" : "start")).append(" ")
+                    .append(Text.translatable("text.repeating-mod.replay")));
+            record_btn.setMessage(Text.translatable("text.repeating-mod." +
+                            ((mod.is_recording) ? "stop" : "start")).append(" ")
+                    .append(Text.translatable("text.repeating-mod.record")));
+            loop_btn.setMessage(Text.of(((mod.loop_replay) ? "\uefff " : "\ueffe ")));
+        }
     }
 
     @Override
@@ -73,6 +76,7 @@ public class RepeatingScreen extends BaseOwoScreen<FlowLayout> {
                     }
                 }).margins(Insets.of(1)).sizing(
                 Sizing.fixed(120),Sizing.fixed(20));
+        was_build = true;
 
         rootComponent.child(
             Containers.horizontalFlow(Sizing.content(), Sizing.content()).child(
@@ -169,7 +173,7 @@ public class RepeatingScreen extends BaseOwoScreen<FlowLayout> {
                         .setFromDiscreteValue(mod.record_pos_delay)
                         .message((String s)->{
                             mod.record_pos_delay = Long.parseLong(s);
-                            mod.conf.data.put("record_pos_delay",mod.record_pos_delay);
+                            mod.conf.data.put("record_pos_delay",String.valueOf(mod.record_pos_delay));
                             mod.conf.save();
                             if (mod.record_pos_delay > -1)
                                 return Text.translatable("text.repeating-mod.pos_delay", s);
