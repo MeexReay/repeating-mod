@@ -19,7 +19,6 @@ import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.*;
 
 public class RepeatingMod implements ClientModInitializer {
@@ -28,22 +27,24 @@ public class RepeatingMod implements ClientModInitializer {
 	public static final FabricLoader loader = FabricLoader.getInstance();
 	public static RepeatingMod me;
 
-	public Thread move_tick = null;
 	public List<RecordEvent> record = new ArrayList<>();
 	public boolean is_recording = false;
-	public Date last_record = null;
+	public long last_record = -1;
+	public TickTask move_tick = null;
 
-	public Thread replay = null;
+	public TickTask replay_tick = null;
 	public boolean is_replaying = false;
 	public boolean loop_replay = false;
 	public static RecordInputEvent input_replay = null;
+
+	public long living_ticks = 0;
 
 	public static RepeatingScreen menu;
 	private static KeyBinding menu_key;
 	private static KeyBinding toggle_replay_key;
 	private static KeyBinding toggle_record_key;
 
-	public long record_pos_delay = 1000;
+	public long record_pos_delay = 20;
 
 	public EasyConfig conf;
 
@@ -90,6 +91,13 @@ public class RepeatingMod implements ClientModInitializer {
 				}
 			}
 		});
+
+		new TickTask(0,0) {
+			@Override
+			public void run() {
+				living_ticks++;
+			}
+		};
 	}
 
 	public RecordEvent getLastRecord(String t) {
@@ -111,31 +119,30 @@ public class RepeatingMod implements ClientModInitializer {
 				client.player.getHeadYaw(), client.player.getPitch()));
 
 		if (record_pos_delay > 0) {
-			move_tick = new Thread(() -> {
-				while (is_recording) {
-					try {
-						Thread.sleep(record_pos_delay);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+			move_tick = new TickTask(
+					record_pos_delay,
+					record_pos_delay) {
+				@Override
+				public void run() {
 					record.add(new RecordMoveEvent(client.player.getPos(),
 							client.player.getHeadYaw(), client.player.getPitch()));
 				}
-			});
-			move_tick.start();
+			};
 		}
 
 		sendMessage(Text.translatable("message.repeating-mod.record_start"));
 	}
 
 	public void recordTick(RecordEvent e) {
-		Date now = new Date();
-		if (last_record != null) {
-			long diff = now.getTime() - last_record.getTime();
-			if (diff >= 0) record.add(new RecordDelayEvent(diff));
+		if (is_recording) {
+			long now = living_ticks;
+			if (last_record != -1) {
+				long diff = now - last_record - 2;
+				if (diff > 0) record.add(new RecordDelayEvent(diff));
+			}
+			record.add(e);
+			last_record = now;
 		}
-		record.add(e);
-		last_record = now;
 	}
 
 	public void recordAllInput() {
@@ -219,9 +226,12 @@ public class RepeatingMod implements ClientModInitializer {
 
 	public void stopRecording() {
 		is_recording = false;
-		move_tick = null;
+		if (move_tick != null) {
+			move_tick.cancel();
+			move_tick = null;
+		}
 		menu.update_btns();
-		last_record = null;
+		last_record = -1;
 		sendMessage(Text.translatable("message.repeating-mod.record_stop"));
 	}
 
@@ -230,25 +240,41 @@ public class RepeatingMod implements ClientModInitializer {
 		is_recording = false;
 		is_replaying = true;
 		menu.update_btns();
-		replay = new Thread(() -> {
-			while (true) {
-				for (RecordEvent e : record) {
-					if (is_replaying) {
-						e.callback();
-					}
+		replay_tick = new TickTask(0,0, TickTask.TickAt.CLIENT_TAIL) {
+			public int replay_index = 0;
+
+			@Override
+			public void run() {
+				if (!is_replaying) cancel();
+				RecordEvent e = record.get(replay_index);
+				if (e instanceof RecordDelayEvent) {
+					setDelay(((RecordDelayEvent) e).delay);
+				} else {
+					e.callback();
 				}
-				if (!loop_replay || !is_replaying) break;
+
+				replay_index++;
+				if (!loop_replay) {
+					if (replay_index == record.size()) {
+						stopReplay();
+						cancel();
+					}
+				} else if (replay_index == record.size()) {
+					replay_index = 0;
+				}
 			}
-			stopReplay();
-		});
-		replay.start();
+		};
+
 		sendMessage(Text.translatable("message.repeating-mod.replay_start"));
 	}
 
 	public void stopReplay() {
 		is_recording = false;
 		is_replaying = false;
-		replay = null;
+		if (replay_tick != null) {
+			replay_tick.cancel();
+			replay_tick = null;
+		}
 		menu.update_btns();
 		sendMessage(Text.translatable("message.repeating-mod.replay_stop"));
 	}
@@ -263,6 +289,10 @@ public class RepeatingMod implements ClientModInitializer {
 		client.player.sendMessage(Text.literal("[")
 				.append(Text.translatable("text.repeating-mod.name"))
 				.append("] ").append(text));
+	}
+
+	public static void sendDebug(String s) {
+		client.player.sendMessage(Text.literal("[DEBUG] ").append(Text.of(s)));
 	}
 
 	public static abstract class RecordEvent {
@@ -305,7 +335,7 @@ public class RepeatingMod implements ClientModInitializer {
 
 		public void callback() {
 			try {
-				Thread.sleep(delay);
+				Thread.sleep(delay/20*1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

@@ -14,9 +14,9 @@
   "text.repeating-mod.parkour": "Parkour mode",
   "text.repeating-mod.settings": "Settings",
   "text.repeating-mod.dev": "In development...",
-  "text.repeating-mod.nan_pos_delay": "No pos delay",
-  "text.repeating-mod.pos_delay": "Pos delay: %s ms",
-  "text.repeating-mod.pos_delay_text": "Delay after which the pos event is added",
+  "text.repeating-mod.nan_pos_delay": "No pos timer",
+  "text.repeating-mod.pos_delay": "Pos timer: %s ticks",
+  "text.repeating-mod.pos_delay_text": "Timer after which the pos\nevent is added (20 ticks = 1 sec)",
 
   "message.repeating-mod.replay_start": "Replay started",
   "message.repeating-mod.replay_stop": "Replay finished",

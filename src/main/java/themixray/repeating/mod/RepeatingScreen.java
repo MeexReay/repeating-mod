@@ -169,7 +169,7 @@ public class RepeatingScreen extends BaseOwoScreen<FlowLayout> {
                     .horizontalAlignment(HorizontalAlignment.CENTER)
                     .margins(Insets.of(1)))
                 .child(Containers.verticalFlow(Sizing.content(), Sizing.content())
-                    .child(Components.discreteSlider(Sizing.fixed(120),-24,5000)
+                    .child(Components.discreteSlider(Sizing.fixed(120),-20,100)
                         .setFromDiscreteValue(mod.record_pos_delay)
                         .message((String s)->{
                             mod.record_pos_delay = Long.parseLong(s);
@@ -177,7 +177,7 @@ public class RepeatingScreen extends BaseOwoScreen<FlowLayout> {
                             mod.conf.save();
                             if (mod.record_pos_delay > -1)
                                 return Text.translatable("text.repeating-mod.pos_delay", s);
-                            return Text.translatable("text.repeating-mod.nan_pos_delay", s);
+                            return Text.translatable("text.repeating-mod.nan_pos_delay");
                         }).scrollStep(25)
                         .margins(Insets.of(1))
                         .tooltip(Text.translatable("text.repeating-mod.pos_delay_text")))

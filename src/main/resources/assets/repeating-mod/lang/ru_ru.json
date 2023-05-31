@@ -14,9 +14,9 @@
   "text.repeating-mod.parkour": "Режим паркура",
   "text.repeating-mod.settings": "Настройки",
   "text.repeating-mod.dev": "В разработке...",
-  "text.repeating-mod.nan_pos_delay": "Задержки позиции нету",
-  "text.repeating-mod.pos_delay": "Задержка позиции: %s мс",
-  "text.repeating-mod.pos_delay_text": "Задержка, после которой добавляется ивент позиции",
+  "text.repeating-mod.nan_pos_delay": "Таймера позиции нету",
+  "text.repeating-mod.pos_delay": "Таймер позиции: %s тиков",
+  "text.repeating-mod.pos_delay_text": "Таймер, после которой добавляется\nивент позиции (20 тиков = 1 сек)",
 
   "message.repeating-mod.replay_start": "Повтор начат",
   "message.repeating-mod.replay_stop": "Повтор закончен",
