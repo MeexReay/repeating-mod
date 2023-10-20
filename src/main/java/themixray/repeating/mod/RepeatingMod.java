@@ -4,28 +4,48 @@ import com.google.common.collect.Lists;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.MovementType;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL11;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import themixray.repeating.mod.render.RenderHelper;
+import themixray.repeating.mod.render.RenderSystem;
+import themixray.repeating.mod.render.buffer.WorldBuffer;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class RepeatingMod implements ClientModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("repeating-mod");
 	public static final MinecraftClient client = MinecraftClient.getInstance();
 	public static final FabricLoader loader = FabricLoader.getInstance();
 	public static RepeatingMod me;
+
+	public Vec3d start_record_pos = null;
+	public Vec3d finish_record_pos = null;
 
 	public List<RecordEvent> record = new ArrayList<>();
 	public boolean is_recording = false;
@@ -46,12 +66,58 @@ public class RepeatingMod implements ClientModInitializer {
 
 	public long record_pos_delay = 20;
 
+	public static Random rand = new Random();
+
 	public EasyConfig conf;
 
 	@Override
 	public void onInitializeClient() {
 		LOGGER.info("Repeating mod initialized");
 		me = this;
+
+		RenderSystem.init();
+		WorldRenderEvents.LAST.register(context -> {
+			WorldBuffer buffer = RenderHelper.startTri(context);
+			if (start_record_pos != null) {
+				RenderHelper.drawRectFromTri(buffer,
+						(float) start_record_pos.getX() - 0.25F,
+						(float) start_record_pos.getY() + 0.01F,
+						(float) start_record_pos.getZ() - 0.25F,
+
+						(float) start_record_pos.getX() + 0.25F,
+						(float) start_record_pos.getY() + 0.01F,
+						(float) start_record_pos.getZ() - 0.25F,
+
+						(float) start_record_pos.getX() + 0.25F,
+						(float) start_record_pos.getY() + 0.01F,
+						(float) start_record_pos.getZ() + 0.25F,
+
+						(float) start_record_pos.getX() - 0.25F,
+						(float) start_record_pos.getY() + 0.01F,
+						(float) start_record_pos.getZ() + 0.25F,
+						new Color(70,230,70,128));
+			}
+			if (finish_record_pos != null) {
+				RenderHelper.drawRectFromTri(buffer,
+						(float) finish_record_pos.getX() - 0.25F,
+						(float) finish_record_pos.getY() + 0.01F,
+						(float) finish_record_pos.getZ() - 0.25F,
+
+						(float) finish_record_pos.getX() + 0.25F,
+						(float) finish_record_pos.getY() + 0.01F,
+						(float) finish_record_pos.getZ() - 0.25F,
+
+						(float) finish_record_pos.getX() + 0.25F,
+						(float) finish_record_pos.getY() + 0.01F,
+						(float) finish_record_pos.getZ() + 0.25F,
+
+						(float) finish_record_pos.getX() - 0.25F,
+						(float) finish_record_pos.getY() + 0.01F,
+						(float) finish_record_pos.getZ() + 0.25F,
+						new Color(230,70,70,128));
+			}
+			RenderHelper.endTri(buffer);
+		});
 
 		Map<String,String> def = new HashMap<>();
 		def.put("record_pos_delay", String.valueOf(record_pos_delay));
@@ -109,14 +175,15 @@ public class RepeatingMod implements ClientModInitializer {
 		return null;
 	}
 
-
 	public void startRecording() {
 		is_recording = true;
 		menu.update_btns();
 		record.clear();
 
-		record.add(new RecordMoveEvent(client.player.getPos(),
-				client.player.getHeadYaw(), client.player.getPitch()));
+		finish_record_pos = null;
+		Vec3d v = client.player.getPos();
+		record.add(new RecordMoveEvent(v,client.player.getHeadYaw(),client.player.getPitch()));
+		start_record_pos = v;
 
 		if (record_pos_delay > 0) {
 			move_tick = new TickTask(
@@ -226,6 +293,7 @@ public class RepeatingMod implements ClientModInitializer {
 
 	public void stopRecording() {
 		is_recording = false;
+		finish_record_pos = client.player.getPos();
 		if (move_tick != null) {
 			move_tick.cancel();
 			move_tick = null;
@@ -285,10 +353,11 @@ public class RepeatingMod implements ClientModInitializer {
 		return (double) Math.round(value * factor) / factor;
 	}
 
-	public static void sendMessage(Text text) {
+	public static void sendMessage(MutableText text) {
 		client.player.sendMessage(Text.literal("[")
-				.append(Text.translatable("text.repeating-mod.name"))
-				.append("] ").append(text));
+			.append(Text.translatable("text.repeating-mod.name"))
+			.append("] ").formatted(Formatting.BOLD,Formatting.DARK_GRAY)
+			.append(text.formatted(Formatting.RESET).formatted(Formatting.GRAY)));
 	}
 
 	public static void sendDebug(String s) {

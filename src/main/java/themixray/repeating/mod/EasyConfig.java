@@ -71,10 +71,10 @@ public class EasyConfig {
     }
 
     private String toText(Map<String,String> p) {
-        String t = "";
+        StringBuilder t = new StringBuilder();
         for (Map.Entry<String,String> e:p.entrySet())
-            t += e.getKey() + "=" + e.getValue() + "\n";
-        return t;
+            t.append(e.getKey()).append("=").append(e.getValue()).append("\n");
+        return t.toString();
     }
     private Map<String,String> toMap(String j) {
         Map<String,String> m = new HashMap<>();
