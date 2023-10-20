@@ -52,7 +52,7 @@ public class RepeatingScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        renderBackground(context);
+        renderBackgroundTexture(context);
 //        context.drawCenteredTextWithShadow(textRenderer,
 //            Text.literal("You must see me"),
 //                width / 2, height / 2,
