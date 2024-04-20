@@ -6,7 +6,7 @@ import themixray.repeating.mod.render.shader.ShaderManager;
 
 @UtilityClass
 public class RenderSystem {
-    public void init() {
+    public static void init() {
         BufferManager.init();
         ShaderManager.init();
     }

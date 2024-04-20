@@ -31,11 +31,11 @@ public class RenderHelper {
         buffer.vert(x2, y2, z2, color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, color.getAlpha() / 255f);
     }
 
-    public WorldBuffer startTri(WorldRenderContext context) {
+    public static WorldBuffer startTri(WorldRenderContext context) {
         return new WorldBuffer(GL_TRIANGLES, ShaderManager.getPositionColorShader(), context);
     }
 
-    public void endTri(WorldBuffer buffer) {
+    public static void endTri(WorldBuffer buffer) {
         //glDepthRange(0, 0.7);
         glEnable(GL_BLEND);
         glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
@@ -54,12 +54,12 @@ public class RenderHelper {
         buffer.vert(x3, y3, z3, color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, color.getAlpha() / 255f);
     }
 
-    public void drawRectFromTri(WorldBuffer buffer,
-                         float x1, float y1, float z1,
-                         float x2, float y2, float z2,
-                         float x3, float y3, float z3,
-                         float x4, float y4, float z4,
-                         Color color) {
+    public static void drawRectFromTri(WorldBuffer buffer,
+                                       float x1, float y1, float z1,
+                                       float x2, float y2, float z2,
+                                       float x3, float y3, float z3,
+                                       float x4, float y4, float z4,
+                                       Color color) {
         drawTri(buffer,
                 x1, y1, z1,
                 x2, y2, z2,
