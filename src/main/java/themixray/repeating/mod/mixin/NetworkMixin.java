@@ -1,6 +1,5 @@
 package themixray.repeating.mod.mixin;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.listener.ServerPlayPacketListener;
 import net.minecraft.network.packet.Packet;
@@ -8,8 +7,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import themixray.repeating.mod.RepeatingMod;
-import themixray.repeating.mod.TickTask;
 
 import java.time.Duration;
 import java.util.function.BooleanSupplier;

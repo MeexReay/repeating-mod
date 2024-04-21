@@ -1,4 +1,4 @@
-package themixray.repeating.mod.events;
+package themixray.repeating.mod.event;
 
 public class RecordDelayEvent extends RecordEvent {
     public long delay;

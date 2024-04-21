@@ -1,4 +1,4 @@
-package themixray.repeating.mod.events;
+package themixray.repeating.mod.event;
 
 import themixray.repeating.mod.Main;
 

@@ -19,7 +19,7 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "themixray.repeating.mod.RepeatingMod"
+      "themixray.repeating.mod.Main"
     ]
   },
   "mixins": [

@@ -1,4 +1,4 @@
-package themixray.repeating.mod.events;
+package themixray.repeating.mod.event;
 
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;

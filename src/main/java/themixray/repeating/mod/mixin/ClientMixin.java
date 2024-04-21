@@ -5,15 +5,15 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import themixray.repeating.mod.RepeatingMod;
+import themixray.repeating.mod.Main;
 import themixray.repeating.mod.TickTask;
 
 @Mixin(MinecraftClient.class)
 public abstract class ClientMixin {
 	@Inject(at = @At(value = "HEAD"), method = "tick")
 	private void onTickHead(CallbackInfo ci) {
-		if (RepeatingMod.me.is_recording)
-			RepeatingMod.me.recordAllInput();
+		if (Main.me.is_recording)
+			Main.me.recordAllInput();
 		TickTask.tickTasks(TickTask.TickAt.CLIENT_HEAD);
 	}
 

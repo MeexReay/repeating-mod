@@ -1,4 +1,4 @@
-package themixray.repeating.mod.events;
+package themixray.repeating.mod.event;
 
 import net.minecraft.entity.MovementType;
 import net.minecraft.util.math.Vec3d;

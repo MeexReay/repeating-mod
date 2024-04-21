@@ -1,4 +1,4 @@
-package themixray.repeating.mod.events;
+package themixray.repeating.mod.event;
 
 import net.minecraft.util.math.BlockPos;
 import themixray.repeating.mod.Main;

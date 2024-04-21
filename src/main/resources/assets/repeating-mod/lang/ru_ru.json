@@ -10,19 +10,29 @@
   "text.repeating-mod.stop_replay": "Остановить повтор",
   "text.repeating-mod.record_tooltip": "Начать/остановить запись всех действий",
   "text.repeating-mod.replay_tooltip": "Начать/остановить повтор записанных действий",
-  "text.repeating-mod.loop_tooltip": "Вкл/выкл повтор повтора записанных действий",
-  "text.repeating-mod.export": "Экспорт записи",
+  "text.repeating-mod.loop_tooltip": "Вкл/выкл повтор записи",
   "text.repeating-mod.import": "Импорт записи",
   "text.repeating-mod.export_tooltip": "Экспорт записи в файл",
-  "text.repeating-mod.import_tooltip": "Импорт записи из файла import.txt",
+  "text.repeating-mod.import_tooltip": "Импорт записи из файла",
   "text.repeating-mod.dev": "В разработке...",
   "text.repeating-mod.nan_pos_delay": "Таймера позиции нету",
   "text.repeating-mod.pos_delay": "Таймер позиции: %s тиков",
   "text.repeating-mod.pos_delay_tooltip": "Таймер, после которой добавляется\nивент позиции (20 тиков = 1 сек)",
+  "text.repeating-mod.unnamed": "Безымянная Запись",
+  "text.repeating-mod.on_loop": "Включить повторение",
+  "text.repeating-mod.off_loop": "Выключить повторение",
+  "text.repeating-mod.recorded_at": "Записано в",
+  "text.repeating-mod.author": "Автор",
 
   "message.repeating-mod.replay_start": "Повтор начат",
   "message.repeating-mod.replay_stop": "Повтор закончен",
   "message.repeating-mod.record_start": "Запись начата",
-  "message.repeating-mod.record_stop": "Запись закончена"
+  "message.repeating-mod.record_stop": "Запись закончена",
+
+  "text.repeating-mod.export_record": "Экпорт записи",
+  "text.repeating-mod.export": "Экспорт",
+  "text.repeating-mod.delete": "Удалить",
+  "text.repeating-mod.start": "Старт",
+  "text.repeating-mod.stop": "Стоп"
 }
 

@@ -21,28 +21,28 @@ public class BufferManager {
         });
     }
 
-    public void bindBuffer() {
+    public static void bindBuffer() {
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
     }
 
-    public void unbindBuffer() {
+    public static void unbindBuffer() {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
-    public void writeBuffer(FloatBuffer buffer) {
+    public static void writeBuffer(FloatBuffer buffer) {
         glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
     }
 
-    public void draw(int drawMode, int verts) {
+    public static void draw(int drawMode, int verts) {
         glDrawArrays(drawMode, 0, verts);
     }
 
-    public void bind() {
+    public static void bind() {
         prevVao = glGetInteger(GL_VERTEX_ARRAY_BINDING);
         glBindVertexArray(vao);
     }
 
-    public void unbind() {
+    public static void unbind() {
         glBindVertexArray(prevVao);
     }
 }

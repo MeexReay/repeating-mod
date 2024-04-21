@@ -1,4 +1,4 @@
-package themixray.repeating.mod.events;
+package themixray.repeating.mod.event;
 
 public abstract class RecordEvent {
     public abstract void replay();
