@@ -2,7 +2,7 @@ package themixray.repeating.mod.events;
 
 import net.minecraft.entity.MovementType;
 import net.minecraft.util.math.Vec3d;
-import themixray.repeating.mod.RepeatingMod;
+import themixray.repeating.mod.Main;
 
 public class RecordMoveEvent extends RecordEvent {
     public Vec3d vec;
@@ -25,11 +25,11 @@ public class RecordMoveEvent extends RecordEvent {
     }
 
     public void replay() {
-        Vec3d p = RepeatingMod.client.player.getPos();
+        Vec3d p = Main.client.player.getPos();
         Vec3d v = new Vec3d(vec.getX() - p.getX(), vec.getY() - p.getY(), vec.getZ() - p.getZ());
-        RepeatingMod.client.player.move(MovementType.SELF, v);
-        RepeatingMod.client.player.setYaw(yaw);
-        RepeatingMod.client.player.setPitch(pitch);
+        Main.client.player.move(MovementType.SELF, v);
+        Main.client.player.setYaw(yaw);
+        Main.client.player.setPitch(pitch);
     }
 
     public String serialize() {

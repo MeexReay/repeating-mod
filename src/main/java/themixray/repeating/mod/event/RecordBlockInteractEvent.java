@@ -5,7 +5,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import themixray.repeating.mod.RepeatingMod;
+import themixray.repeating.mod.Main;
 
 public class RecordBlockInteractEvent extends RecordEvent {
     public Hand hand;
@@ -32,7 +32,7 @@ public class RecordBlockInteractEvent extends RecordEvent {
     }
 
     public void replay() {
-        RepeatingMod.client.interactionManager.interactBlock(RepeatingMod.client.player, hand, hitResult);
+        Main.client.interactionManager.interactBlock(Main.client.player, hand, hitResult);
     }
 
     public String serialize() {

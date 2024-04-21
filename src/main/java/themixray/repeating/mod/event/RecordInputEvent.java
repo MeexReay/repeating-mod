@@ -1,6 +1,6 @@
 package themixray.repeating.mod.events;
 
-import themixray.repeating.mod.RepeatingMod;
+import themixray.repeating.mod.Main;
 
 public class RecordInputEvent extends RecordEvent {
     public Boolean sneaking;
@@ -92,38 +92,38 @@ public class RecordInputEvent extends RecordEvent {
     }
 
     public void replay() {
-        RepeatingMod.input_replay = this;
+        Main.input_replay = this;
     }
 
     public void inputCallback() {
-        if (sprinting != null && RepeatingMod.client.player.isSprinting() != sprinting)
-            RepeatingMod.client.player.setSprinting(sprinting);
-        if (RepeatingMod.client.player.getYaw() != yaw)
-            RepeatingMod.client.player.setYaw(yaw);
-        if (RepeatingMod.client.player.getHeadYaw() != head_yaw)
-            RepeatingMod.client.player.setHeadYaw(head_yaw);
-        if (RepeatingMod.client.player.getBodyYaw() != body_yaw)
-            RepeatingMod.client.player.setBodyYaw(body_yaw);
-        if (RepeatingMod.client.player.getPitch() != pitch)
-            RepeatingMod.client.player.setPitch(pitch);
-        if (RepeatingMod.client.player.getMovementSpeed() != speed)
-            RepeatingMod.client.player.setMovementSpeed(speed);
-        if (sneaking != null && RepeatingMod.client.player.input.sneaking != sneaking)
-            RepeatingMod.client.player.input.sneaking = sneaking;
-        if (jumping != null && RepeatingMod.client.player.input.jumping != jumping)
-            RepeatingMod.client.player.input.jumping = jumping;
-        if (movementSideways != null && RepeatingMod.client.player.input.movementSideways != movementSideways)
-            RepeatingMod.client.player.input.movementSideways = movementSideways;
-        if (movementForward != null && RepeatingMod.client.player.input.movementForward != movementForward)
-            RepeatingMod.client.player.input.movementForward = movementForward;
-        if (pressingForward != null && RepeatingMod.client.player.input.pressingForward != pressingForward)
-            RepeatingMod.client.player.input.pressingForward = pressingForward;
-        if (pressingBack != null && RepeatingMod.client.player.input.pressingBack != pressingBack)
-            RepeatingMod.client.player.input.pressingBack = pressingBack;
-        if (pressingLeft != null && RepeatingMod.client.player.input.pressingLeft != pressingLeft)
-            RepeatingMod.client.player.input.pressingLeft = pressingLeft;
-        if (pressingRight != null && RepeatingMod.client.player.input.pressingRight != pressingRight)
-            RepeatingMod.client.player.input.pressingRight = pressingRight;
+        if (sprinting != null && Main.client.player.isSprinting() != sprinting)
+            Main.client.player.setSprinting(sprinting);
+        if (Main.client.player.getYaw() != yaw)
+            Main.client.player.setYaw(yaw);
+        if (Main.client.player.getHeadYaw() != head_yaw)
+            Main.client.player.setHeadYaw(head_yaw);
+        if (Main.client.player.getBodyYaw() != body_yaw)
+            Main.client.player.setBodyYaw(body_yaw);
+        if (Main.client.player.getPitch() != pitch)
+            Main.client.player.setPitch(pitch);
+        if (Main.client.player.getMovementSpeed() != speed)
+            Main.client.player.setMovementSpeed(speed);
+        if (sneaking != null && Main.client.player.input.sneaking != sneaking)
+            Main.client.player.input.sneaking = sneaking;
+        if (jumping != null && Main.client.player.input.jumping != jumping)
+            Main.client.player.input.jumping = jumping;
+        if (movementSideways != null && Main.client.player.input.movementSideways != movementSideways)
+            Main.client.player.input.movementSideways = movementSideways;
+        if (movementForward != null && Main.client.player.input.movementForward != movementForward)
+            Main.client.player.input.movementForward = movementForward;
+        if (pressingForward != null && Main.client.player.input.pressingForward != pressingForward)
+            Main.client.player.input.pressingForward = pressingForward;
+        if (pressingBack != null && Main.client.player.input.pressingBack != pressingBack)
+            Main.client.player.input.pressingBack = pressingBack;
+        if (pressingLeft != null && Main.client.player.input.pressingLeft != pressingLeft)
+            Main.client.player.input.pressingLeft = pressingLeft;
+        if (pressingRight != null && Main.client.player.input.pressingRight != pressingRight)
+            Main.client.player.input.pressingRight = pressingRight;
     }
 
     public String serialize() {

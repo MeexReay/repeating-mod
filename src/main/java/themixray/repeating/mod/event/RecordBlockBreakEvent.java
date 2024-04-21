@@ -1,7 +1,7 @@
 package themixray.repeating.mod.events;
 
 import net.minecraft.util.math.BlockPos;
-import themixray.repeating.mod.RepeatingMod;
+import themixray.repeating.mod.Main;
 
 public class RecordBlockBreakEvent extends RecordEvent {
     public BlockPos pos;
@@ -19,7 +19,7 @@ public class RecordBlockBreakEvent extends RecordEvent {
     }
 
     public void replay() {
-        RepeatingMod.client.interactionManager.breakBlock(pos);
+        Main.client.interactionManager.breakBlock(pos);
     }
 
     public String serialize() {

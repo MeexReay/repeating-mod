@@ -7,6 +7,7 @@ import themixray.repeating.mod.events.RecordEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecordFile {
@@ -68,37 +69,42 @@ public class RecordFile {
 
     }
 
-    public void writeToFile(File file) {
+    public static void readFromMod() {
 
     }
 
-    public static void readFromMod() {
+    public void writeToFile(File file) {
 
     }
 
     public static RecordFile readFromFile(File file) throws IOException {
         String text = Files.readString(file.toPath());
-
         List<String> lines = List.of(text.split("\n"));
-        String last_line = lines.get(lines.size()-1);
-        lines = lines.subList(0,lines.size()-1);
 
-        List<RecordEvent>
+        List<String> signature = lines.subList(0,4);
 
-        for (String line: lines)
-            RepeatingMod.me.record.add(RecordEvent.deserialize(line));
+        String name = signature.get(0);
+        String data = signature.get(1);
+        String author = signature.get(2);
 
-        String[] lss0 = ls.split("x");
+        String record_pos = signature.get(3);
+
+        String[] lss0 = record_pos.split("x");
         String[] lss1 = lss0[0].split("n");
         String[] lss2 = lss0[1].split("n");
-        RepeatingMod.me.start_record_pos = new Vec3d(
+
+        Vec3d start_record_pos = new Vec3d(
                 Float.parseFloat(lss1[0]),
                 Float.parseFloat(lss1[1]),
                 Float.parseFloat(lss1[2]));
-        RepeatingMod.me.finish_record_pos = new Vec3d(
+        Vec3d finish_record_pos = new Vec3d(
                 Float.parseFloat(lss2[0]),
                 Float.parseFloat(lss2[1]),
                 Float.parseFloat(lss2[2]));
-        RepeatingMod.sendMessage(Text.literal(""));
+
+        List<String> event_lines = lines.subList(4,lines.size());
+        List<RecordEvent> events = event_lines.stream().map(RecordEvent::deserialize).toList();
+
+        return new RecordFile(file, )
     }
 }
