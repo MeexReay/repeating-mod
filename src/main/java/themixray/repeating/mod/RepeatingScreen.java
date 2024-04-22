@@ -11,6 +11,7 @@ import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.text.Text;
+import themixray.repeating.mod.widget.RecordListWidget;
 
 import java.awt.*;
 import java.io.File;
@@ -69,16 +70,23 @@ public class RepeatingScreen extends Screen {
 
     @Override
     protected void init() {
+        RecordListWidget list_widget = Main.me.record_list.getWidget();
+
+        list_widget.setX(width / 2 + 2);
+        list_widget.setY(height / 2 - list_widget.getHeight() / 2);
+        list_widget.init(this);
+
+
         record_btn = ButtonWidget.builder(
-                Text.translatable("text.repeating-mod.start_record"), button -> {
-                    if (!Main.me.is_replaying) {
-                        if (Main.me.is_recording)
-                            Main.me.stopRecording();
-                        else Main.me.startRecording();
-                        updateButtons();
-                    }
-                })
-                .dimensions(width / 2 - 60, height / 2 - 76, 120, 20)
+                        Text.translatable("text.repeating-mod.start_record"), button -> {
+                            if (!Main.me.is_replaying) {
+                                if (Main.me.is_recording)
+                                    Main.me.stopRecording();
+                                else Main.me.startRecording();
+                                updateButtons();
+                            }
+                        })
+                .dimensions(width / 2 - 120, height / 2 - 32, 120, 20)
                 .tooltip(Tooltip.of(Text.translatable("text.repeating-mod.record_tooltip")))
                 .build();
 
@@ -86,14 +94,14 @@ public class RepeatingScreen extends Screen {
                     Main.me.loop_replay = !Main.me.loop_replay;
                     updateButtons();
                 })
-                .dimensions(width / 2 - 60, height / 2 - 54, 120, 20)
+                .dimensions(width / 2 - 120, height / 2 - 10, 120, 20)
                 .tooltip(Tooltip.of(Text.translatable("text.repeating-mod.loop_tooltip")))
                 .build();
 
         pos_delay_slider = new SliderWidget(
-                width / 2 - 60, height / 2 - 32, 120, 20,
+                width / 2 - 120, height / 2 + 12, 120, 20,
                 (Main.me.record_pos_delay < 0) ? Text.translatable("text.repeating-mod.nan_pos_delay") :
-                Text.translatable("text.repeating-mod.pos_delay", String.valueOf(Main.me.record_pos_delay)),
+                        Text.translatable("text.repeating-mod.pos_delay", String.valueOf(Main.me.record_pos_delay)),
                 (Main.me.record_pos_delay+1d)/101d) {
 
             @Override
@@ -153,13 +161,9 @@ public class RepeatingScreen extends Screen {
                             }
                         }}).start();
                 })
-                .dimensions(width / 2 - 60, height / 2 - 10, 120, 20)
+                .dimensions(width / 2 + 2, height / 2 - list_widget.getHeight() / 2 - 22, 180, 20)
                 .tooltip(Tooltip.of(Text.translatable("text.repeating-mod.import_tooltip")))
                 .build();
-
-        Main.me.record_list.getWidget().setX(width / 2 - Main.me.record_list.getWidget().getWidth() / 2);
-        Main.me.record_list.getWidget().setY(height / 2 + 12);
-        Main.me.record_list.getWidget().init(this);
 
         was_build = true;
 

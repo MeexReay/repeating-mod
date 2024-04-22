@@ -51,7 +51,7 @@ public class RecordListWidget extends ScrollableWidget {
     }
 
     public void addWidget(RecordState record) {
-        RecordWidget widget = new RecordWidget(0, 0, width, 50, record, this);
+        RecordWidget widget = new RecordWidget(0, 0, width, 55, record, this);
         widget.init(null);
         widgets.add(0, widget);
     }
@@ -72,7 +72,7 @@ public class RecordListWidget extends ScrollableWidget {
 
     @Override
     protected int getContentsHeight() {
-        return !widgets.isEmpty() ? widgets.size() * 50 + (widgets.size() - 1) * 2 : 0;
+        return !widgets.isEmpty() ? widgets.size() * 55 + (widgets.size() - 1) * 2 : 0;
     }
 
     public void init(RepeatingScreen screen) {

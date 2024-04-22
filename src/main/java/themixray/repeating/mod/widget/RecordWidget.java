@@ -77,7 +77,7 @@ public class RecordWidget implements Drawable, Widget {
                 Main.client.textRenderer,
                 parent.getX() + getX() + 5,
                 parent.getY() + getY() + 5,
-                70,
+                102,
                 10,
                 Text.empty());
 
@@ -96,7 +96,7 @@ public class RecordWidget implements Drawable, Widget {
 
         ButtonWidget delete_button = ButtonWidget.builder(Text.translatable("text.repeating-mod.delete"), (i) -> {
             record.remove();
-        }).dimensions(parent.getX() + getX() + 77,parent.getY() + getY() + 4, 38, 13).build();
+        }).dimensions(parent.getX() + getX() + 110,parent.getY() + getY() + 4, 65, 13).build();
 
         children.add(delete_button);
 
@@ -113,7 +113,7 @@ public class RecordWidget implements Drawable, Widget {
                     }
                 }
             }
-        }).dimensions(parent.getX() + getX() + 77,parent.getY() + getY() + 4 + 14, 38, 13).build();
+        }).dimensions(parent.getX() + getX() + 110,parent.getY() + getY() + 4 + 14, 65, 13).build();
 
         children.add(export_button);
 
@@ -125,7 +125,7 @@ public class RecordWidget implements Drawable, Widget {
             i.setMessage(Text.translatable("text.repeating-mod.stop"));
             Main.me.now_record = record;
             Main.me.startReplay();
-        }).dimensions(parent.getX() + getX() + 77,parent.getY() + getY() + 4 + 28, 38, 13)
+        }).dimensions(parent.getX() + getX() + 110,parent.getY() + getY() + 4 + 28, 65, 13)
                 .tooltip(Tooltip.of(Text.translatable("text.repeating-mod.replay_tooltip"))).build();
 
         children.add(replay_button);
@@ -171,8 +171,8 @@ public class RecordWidget implements Drawable, Widget {
                         .append(": ")
                         .styled((s) -> s.withColor(0xbbbbbb)),
                 Text.literal(record.getAuthor()).styled((s) -> s.withColor(0xffffff))
-            ), 0.7f,
-            7,
+            ), 1,
+            9,
             false);
 
         if (!children.isEmpty()) {
@@ -180,13 +180,13 @@ public class RecordWidget implements Drawable, Widget {
             name_widget.setPosition(parent.getX() + getX() + 5, parent.getY() + getY() + 5);
 
             ClickableWidget delete_button = children.get(1);
-            delete_button.setPosition(parent.getX() + getX() + 77,parent.getY() + getY() + 4);
+            delete_button.setPosition(parent.getX() + getX() + 110,parent.getY() + getY() + 4);
 
             ClickableWidget export_button = children.get(2);
-            export_button.setPosition(parent.getX() + getX() + 77,parent.getY() + getY() + 4 + 14);
+            export_button.setPosition(parent.getX() + getX() + 110,parent.getY() + getY() + 4 + 14);
 
             ClickableWidget replay_button = children.get(3);
-            replay_button.setPosition(parent.getX() + getX() + 77,parent.getY() + getY() + 4 + 28);
+            replay_button.setPosition(parent.getX() + getX() + 110,parent.getY() + getY() + 4 + 28);
         }
 
         for (ClickableWidget child : children) {

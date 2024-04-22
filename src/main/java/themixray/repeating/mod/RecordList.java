@@ -18,7 +18,7 @@ public class RecordList {
     public RecordList(File folder) {
         this.folder = folder;
         this.records = new ArrayList<>();
-        this.widget = new RecordListWidget(0, 0, 120, 80);
+        this.widget = new RecordListWidget(0, 0, 180, 200);
     }
 
     public List<RecordState> getRecords() {

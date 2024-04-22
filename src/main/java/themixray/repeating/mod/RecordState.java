@@ -128,11 +128,6 @@ public class RecordState {
         }
 
         Files.write(file.toPath(), text.toString().getBytes());
-
-        if (Desktop.isDesktopSupported()) {
-            Desktop desktop = Desktop.getDesktop();
-            desktop.browse(file.toURI());
-        }
     }
 
     public static RecordState load(File file) throws Exception {
