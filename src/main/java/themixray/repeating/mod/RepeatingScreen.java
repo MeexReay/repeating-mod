@@ -51,7 +51,7 @@ public class RepeatingScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        renderBackground(context,mouseX,mouseY,delta);
+        renderBackground(context);
 
         for (RenderListener l : render_listeners) {
             if (l.beforeRender()) {
@@ -148,7 +148,7 @@ public class RepeatingScreen extends Screen {
                         if (files != null) {
                             for (File file : files) {
                                 try {
-                                    Main.me.record_list.addRecord(file);
+                                    Main.me.setNowRecord(Main.me.record_list.addRecord(file));
                                 } catch (Exception e) {
                                     throw new RuntimeException(e);
                                 }

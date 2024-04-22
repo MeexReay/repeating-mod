@@ -41,8 +41,10 @@ public class RecordList {
         }
     }
 
-    public void addRecord(File file) throws Exception {
-        addRecord(RecordState.load(file));
+    public RecordState addRecord(File file) throws Exception {
+        RecordState st = RecordState.load(file);
+        addRecord(st);
+        return st;
     }
 
     public void addRecord(RecordState record) {

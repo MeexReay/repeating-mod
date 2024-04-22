@@ -109,6 +109,8 @@ public class RecordState {
     }
 
     public void save() throws IOException {
+        if (start_record_pos == null || finish_record_pos == null) return;
+
         StringBuilder text = new StringBuilder();
 
         text.append(name).append("\n")
@@ -162,8 +164,13 @@ public class RecordState {
     }
 
     public void remove() {
-        file.delete();
         Main.me.record_list.removeRecord(this);
         Main.me.record_list.getWidget().removeWidget(this);
+        if (Main.me.is_recording && this.equals(Main.me.now_record)) {
+            Main.me.stopRecording();
+            Main.me.now_record = null;
+            return;
+        }
+        file.delete();
     }
 }

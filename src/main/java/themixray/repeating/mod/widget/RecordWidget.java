@@ -42,6 +42,10 @@ public class RecordWidget implements Drawable, Widget {
         this.children = new ArrayList<>();
     }
 
+    public boolean contains(int x, int y) {
+        return parent.getX() + getX() <= x && parent.getY() + getY() <= y && x <= parent.getX() + getX() + getWidth() && y <= parent.getY() + getY() + getHeight();
+    }
+
     public void setX(int x) {
         this.x = x;
     }

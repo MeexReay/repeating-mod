@@ -104,7 +104,7 @@ public class RecordListWidget extends ScrollableWidget {
     public boolean checkTransport(transport tr) {
         for (RecordWidget wid : widgets) {
             for (ClickableWidget child : wid.getChildren()) {
-                if (tr.check(child)) {
+                if (child.isFocused() && tr.check(child)) {
                     return true;
                 }
             }
@@ -112,12 +112,14 @@ public class RecordListWidget extends ScrollableWidget {
         return false;
     }
 
-    public boolean checkTransportNF(transport tr) {
+    public boolean checkTransportNF(double mouseX, double mouseY, int button) {
         for (RecordWidget wid : widgets) {
-            for (ClickableWidget child : wid.getChildren()) {
-                boolean res = tr.check(child);
+            if (wid.contains((int) mouseX, (int) mouseY)) {
+                Main.me.setNowRecord(wid.getRecord());
+            }
 
-                if (res) {
+            for (ClickableWidget child : wid.getChildren()) {
+                if (child.mouseClicked(mouseX, mouseY, button)) {
                     child.setFocused(true);
                     return true;
                 } else {
@@ -130,7 +132,7 @@ public class RecordListWidget extends ScrollableWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return checkTransportNF((c) -> c.mouseClicked(mouseX, mouseY + this.getScrollY(), button)) || super.mouseClicked(mouseX, mouseY, button);
+        return checkTransportNF(mouseX, mouseY + getScrollY(), button) || super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
