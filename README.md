@@ -23,7 +23,7 @@ How menu looks like
 ## Todo
 
 - fix "Space in record name deletes record 0_0"
-- fix "Save record on recording crashes the game"
+- fix "Save record (edit name) on recording crashes the game"
 - select record on click (you can see start and finish points when its selected)
 - select record on import
 - change icon in mod menu to new one
