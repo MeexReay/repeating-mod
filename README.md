@@ -14,4 +14,5 @@ Toggle replay     |  not specified
 
 ## Menu
 
-![Repeating menu](https://github.com/MeexReay/repeating-mod/assets/127148610/da923fe5-d44d-421b-b601-2a65cb5543eb)
+![Repeating mod menu](https://github.com/MeexReay/repeating-mod/assets/127148610/5af93d22-09ce-4d1c-9f07-f663227da364)
+
