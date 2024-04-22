@@ -72,8 +72,8 @@ public class RepeatingScreen extends Screen {
     protected void init() {
         RecordListWidget list_widget = Main.me.record_list.getWidget();
 
-        list_widget.setX(width / 2 + 2);
-        list_widget.setY(height / 2 - list_widget.getHeight() / 2);
+        list_widget.method_46421(width / 2 + 2);
+        list_widget.method_46419(height / 2 - list_widget.getHeight() / 2);
         list_widget.init(this);
 
 
@@ -131,6 +131,12 @@ public class RepeatingScreen extends Screen {
             protected void onDrag(double mouseX, double mouseY, double deltaX, double deltaY) {
                 super.onDrag(mouseX, mouseY, deltaX, deltaY);
                 applyValue();
+            }
+
+            @Override
+            public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+                super.render(context, mouseX, mouseY, delta);
+                updateMessage();
             }
         };
         pos_delay_slider.setTooltip(Tooltip.of(Text.translatable("text.repeating-mod.pos_delay_tooltip")));

@@ -1,0 +1,147 @@
+package themixray.repeating.mod.event;
+
+import themixray.repeating.mod.Main;
+
+public class RecordInputEvent extends RecordEvent {
+    public Boolean sneaking;
+    public Boolean jumping;
+    public Boolean pressingForward;
+    public Boolean pressingBack;
+    public Boolean pressingLeft;
+    public Boolean pressingRight;
+    public Boolean sprinting;
+
+    public Float movementSideways;
+    public Float movementForward;
+
+    public float yaw;
+    public float head_yaw;
+    public float body_yaw;
+    public float pitch;
+    public float speed;
+
+    public static RecordInputEvent fromArgs(String[] a) {
+        return new RecordInputEvent(
+                (a[0].equals("n") ? null : a[0].equals("1")),
+                (a[1].equals("n") ? null : a[1].equals("1")),
+                (a[2].equals("n") ? null : Float.parseFloat(a[2])),
+                (a[3].equals("n") ? null : Float.parseFloat(a[3])),
+                (a[4].equals("n") ? null : a[4].equals("1")),
+                (a[5].equals("n") ? null : a[5].equals("1")),
+                (a[6].equals("n") ? null : a[6].equals("1")),
+                (a[7].equals("n") ? null : a[7].equals("1")),
+                Float.parseFloat(a[8]), Float.parseFloat(a[9]),
+                Float.parseFloat(a[10]),
+                (a[11].equals("n") ? null : a[11].equals("1")),
+                Float.parseFloat(a[12]),
+                Float.parseFloat(a[13]));
+    }
+
+    public RecordInputEvent(Boolean sneaking,
+                            Boolean jumping,
+                            Float movementSideways,
+                            Float movementForward,
+                            Boolean pressingForward,
+                            Boolean pressingBack,
+                            Boolean pressingLeft,
+                            Boolean pressingRight,
+                            float head_yaw,
+                            float body_yaw,
+                            float head_pitch,
+                            Boolean sprinting,
+                            float yaw,
+                            float speed) {
+        this.sneaking = sneaking;
+        this.jumping = jumping;
+        this.movementSideways = movementSideways;
+        this.movementForward = movementForward;
+        this.pressingForward = pressingForward;
+        this.pressingBack = pressingBack;
+        this.pressingLeft = pressingLeft;
+        this.pressingRight = pressingRight;
+        this.head_yaw = head_yaw;
+        this.body_yaw = body_yaw;
+        this.pitch = head_pitch;
+        this.sprinting = sprinting;
+        this.yaw = yaw;
+        this.speed = speed;
+    }
+
+    public void fillEmpty(RecordInputEvent e) {
+        if (sneaking == null) sneaking = e.sneaking;
+        if (jumping == null) jumping = e.jumping;
+        if (movementSideways == null) movementSideways = e.movementSideways;
+        if (movementForward == null) movementForward = e.movementForward;
+        if (pressingForward == null) pressingForward = e.pressingForward;
+        if (pressingBack == null) pressingBack = e.pressingBack;
+        if (pressingLeft == null) pressingLeft = e.pressingLeft;
+        if (pressingRight == null) pressingRight = e.pressingRight;
+        if (sprinting == null) sprinting = e.sprinting;
+    }
+
+    public boolean isEmpty() {
+        return sneaking == null &&
+                jumping == null &&
+                movementSideways == null &&
+                movementForward == null &&
+                pressingForward == null &&
+                pressingBack == null &&
+                pressingLeft == null &&
+                pressingRight == null &&
+                sprinting == null;
+    }
+
+    public void replay() {
+        Main.input_replay = this;
+    }
+
+    public void inputCallback() {
+        if (sprinting != null && Main.client.player.isSprinting() != sprinting)
+            Main.client.player.setSprinting(sprinting);
+        if (Main.client.player.getYaw() != yaw)
+            Main.client.player.setYaw(yaw);
+        if (Main.client.player.getHeadYaw() != head_yaw)
+            Main.client.player.setHeadYaw(head_yaw);
+        if (Main.client.player.getBodyYaw() != body_yaw)
+            Main.client.player.setBodyYaw(body_yaw);
+        if (Main.client.player.getPitch() != pitch)
+            Main.client.player.setPitch(pitch);
+        if (Main.client.player.getMovementSpeed() != speed)
+            Main.client.player.setMovementSpeed(speed);
+        if (sneaking != null && Main.client.player.input.sneaking != sneaking)
+            Main.client.player.input.sneaking = sneaking;
+        if (jumping != null && Main.client.player.input.jumping != jumping)
+            Main.client.player.input.jumping = jumping;
+        if (movementSideways != null && Main.client.player.input.movementSideways != movementSideways)
+            Main.client.player.input.movementSideways = movementSideways;
+        if (movementForward != null && Main.client.player.input.movementForward != movementForward)
+            Main.client.player.input.movementForward = movementForward;
+        if (pressingForward != null && Main.client.player.input.pressingForward != pressingForward)
+            Main.client.player.input.pressingForward = pressingForward;
+        if (pressingBack != null && Main.client.player.input.pressingBack != pressingBack)
+            Main.client.player.input.pressingBack = pressingBack;
+        if (pressingLeft != null && Main.client.player.input.pressingLeft != pressingLeft)
+            Main.client.player.input.pressingLeft = pressingLeft;
+        if (pressingRight != null && Main.client.player.input.pressingRight != pressingRight)
+            Main.client.player.input.pressingRight = pressingRight;
+    }
+
+    public String serialize() {
+        return "p=" +
+                ((sneaking == null) ? "n" : (sneaking ? "1" : "0")) + "&" +
+                ((jumping == null) ? "n" : (jumping ? "1" : "0")) + "&" +
+                ((movementSideways == null) ? "n" : movementSideways) + "&" +
+                ((movementForward == null) ? "n" : movementForward) + "&" +
+                ((pressingForward == null) ? "n" : (pressingForward ? "1" : "0")) + "&" +
+                ((pressingBack == null) ? "n" : (pressingBack ? "1" : "0")) + "&" +
+                ((pressingLeft == null) ? "n" : (pressingLeft ? "1" : "0")) + "&" +
+                ((pressingRight == null) ? "n" : (pressingRight ? "1" : "0")) + "&" +
+                head_yaw + "&" + body_yaw + "&" + pitch + "&" +
+                ((sprinting == null) ? "n" : (sprinting ? "1" : "0") +
+                        "&" + yaw + "&" + speed);
+    }
+
+    public String getType() {
+        return "input";
+    }
+}
