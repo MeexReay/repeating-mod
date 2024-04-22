@@ -104,9 +104,13 @@ public class RecordWidget implements Drawable, Widget {
             if (Desktop.isDesktopSupported()) {
                 Desktop desk = Desktop.getDesktop();
                 try {
-                    desk.browse(record.getFile().toURI());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    desk.browseFileDirectory(record.getFile());
+                } catch (Exception e) {
+                    try {
+                        desk.browse(record.getFile().toURI());
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             }
         }).dimensions(parent.getX() + getX() + 77,parent.getY() + getY() + 4 + 14, 38, 13).build();
