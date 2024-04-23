@@ -28,6 +28,7 @@ Releases dont have striked lines
 - ~~select record on click (you can see start and finish points when its selected)~~
 - ~~select record on import~~
 - ~~change icon in mod menu to new one~~
+- create new preview.gif
 - practice mode like in geometry dash for parkours
 
 ## How to build
