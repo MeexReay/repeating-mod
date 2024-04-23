@@ -18,7 +18,7 @@ Toggle replay     |  not specified
 
 How menu looks like
 
-![Repeating mod menu](https://github.com/MeexReay/repeating-mod/assets/127148610/5af93d22-09ce-4d1c-9f07-f663227da364)
+![repeating mod menu](https://github.com/MeexReay/repeating-mod/assets/127148610/4123068f-b150-45ae-8ae3-fcaa0e6bb9f8)
 
 ## Todo
 Releases dont have striked lines
@@ -28,6 +28,7 @@ Releases dont have striked lines
 - ~~select record on click (you can see start and finish points when its selected)~~
 - ~~select record on import~~
 - ~~change icon in mod menu to new one~~
+- create new preview.gif
 - practice mode like in geometry dash for parkours
 
 ## How to build
