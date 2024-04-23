@@ -148,7 +148,7 @@ public class RepeatingScreen extends Screen {
                         if (files != null) {
                             for (File file : files) {
                                 try {
-                                    Main.me.setNowRecord(Main.me.record_list.addRecord(file));
+                                    Main.me.setNowRecord(Main.me.record_list.cloneRecord(file));
                                 } catch (Exception e) {
                                     throw new RuntimeException(e);
                                 }

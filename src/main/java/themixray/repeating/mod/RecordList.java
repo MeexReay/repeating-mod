@@ -5,6 +5,7 @@ import themixray.repeating.mod.widget.RecordListWidget;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -74,6 +75,14 @@ public class RecordList {
 
         addRecord(state);
 
+        return state;
+    }
+
+    public RecordState cloneRecord(File file) throws Exception {
+        File out = new File(Main.me.records_folder, file.getName());
+        Files.copy(file.toPath(), out.toPath());
+        RecordState state = RecordState.load(out);
+        addRecord(state);
         return state;
     }
 }
