@@ -26,11 +26,13 @@ public class MoveEvent extends RecordEvent {
     }
 
     public void replay() {
-        Vec3d p = Main.client.player.getPos();
-        Vec3d v = new Vec3d(vec.getX() - p.getX(), vec.getY() - p.getY(), vec.getZ() - p.getZ());
-        Main.client.player.move(MovementType.SELF, v);
-        Main.client.player.setYaw(yaw);
-        Main.client.player.setPitch(pitch);
+        if (Main.client.player != null) {
+            Vec3d p = Main.client.player.getPos();
+            Vec3d v = new Vec3d(vec.getX() - p.getX(), vec.getY() - p.getY(), vec.getZ() - p.getZ());
+            Main.client.player.move(MovementType.SELF, v);
+            Main.client.player.setYaw(yaw);
+            Main.client.player.setPitch(pitch);
+        }
     }
 
     protected String[] serializeArgs() {

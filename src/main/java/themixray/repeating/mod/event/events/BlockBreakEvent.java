@@ -28,6 +28,8 @@ public class BlockBreakEvent extends RecordEvent {
     }
 
     public void replay() {
-        Main.client.interactionManager.breakBlock(pos);
+        if (Main.client.interactionManager != null) {
+            Main.client.interactionManager.breakBlock(pos);
+        }
     }
 }

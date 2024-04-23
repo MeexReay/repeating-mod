@@ -2,23 +2,21 @@ package themixray.repeating.mod.event;
 
 import themixray.repeating.mod.event.events.*;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.function.Consumer;
-
 public enum RecordEventType {
     BLOCK_BREAK('b',"block_break",BlockBreakEvent.class),
     BLOCK_INTERACT('i',"block_interact",BlockInteractEvent.class),
     DELAY('d',"delay",DelayEvent.class),
     INPUT('p',"input",InputEvent.class),
-    MOVE('m',"move",MoveEvent.class),
-    GUI_KEY_PRESS('r',"key_press",BlockBreakEvent.class),
-    GUI_KEY_RELEASE('s',"key_release",BlockBreakEvent.class),
-    GUI_CHAR_TYPE('h',"char_type",BlockBreakEvent.class),
-    GUI_MOUSE_CLICK('c',"mouse_click",BlockBreakEvent.class),
-    GUI_MOUSE_RELEASE('l',"mouse_release",BlockBreakEvent.class),
-    GUI_MOUSE_DRAG('g',"mouse_drag",BlockBreakEvent.class),
-    GUI_MOUSE_SCROLL('o',"mouse_scroll",BlockBreakEvent.class),
-    GUI_CLOSE('e',"close",BlockBreakEvent.class);
+    MOVE('m',"move",MoveEvent.class);
+//    GUI_KEY_PRESS('r',"key_press", GuiKeyPressEvent.class),
+//    GUI_KEY_RELEASE('s',"key_release",GuiKeyReleaseEvent.class),
+//    GUI_CHAR_TYPE('h',"char_type",GuiCharTypeEvent.class),
+//    GUI_MOUSE_CLICK('c',"mouse_click",GuiMouseClickEvent.class),
+//    GUI_MOUSE_RELEASE('l',"mouse_release",GuiMouseReleaseEvent.class),
+//    GUI_MOUSE_DRAG('g',"mouse_drag",GuiMouseDragEvent.class),
+//    GUI_MOUSE_MOVE('v',"mouse_move",GuiMouseMoveEvent.class),
+//    GUI_MOUSE_SCROLL('o',"mouse_scroll",GuiMouseScrollEvent.class),
+//    GUI_CLOSE('e',"close",GuiCloseEvent.class);
 
     private Class<? extends RecordEvent> ev;
     private char ch;

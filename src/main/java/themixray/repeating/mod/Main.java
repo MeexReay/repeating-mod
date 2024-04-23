@@ -87,6 +87,10 @@ public class Main implements ClientModInitializer {
 			RenderHelper.endTri(buffer);
 		});
 
+		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+			TickTask.tickTasks(TickTask.TickAt.CLIENT_EVENT);
+		});
+
 		Map<String,String> def = new HashMap<>();
 		def.put("record_pos_delay", String.valueOf(record_pos_delay));
 
@@ -273,12 +277,16 @@ public class Main implements ClientModInitializer {
 
 		List<RecordEvent> events = now_record.getEvents();
 
-		replay_tick = new TickTask(0,0, TickTask.TickAt.CLIENT_TAIL) {
+		replay_tick = new TickTask(0,0, TickTask.TickAt.CLIENT_EVENT) {
 			public int replay_index = 0;
 
 			@Override
 			public void run() {
-				if (!is_replaying) cancel();
+				if (!is_replaying) {
+					cancel();
+					return;
+				}
+
 				RecordEvent e = events.get(replay_index);
 				if (e instanceof DelayEvent) {
 					setDelay(((DelayEvent) e).delay);

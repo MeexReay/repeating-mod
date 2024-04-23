@@ -23,7 +23,8 @@ public abstract class TickTask implements Runnable {
     public enum TickAt {
         CLIENT_HEAD, CLIENT_TAIL,
         MOVEMENT_HEAD, MOVEMENT_TAIL,
-        RENDER_HEAD, RENDER_TAIL
+        RENDER_HEAD, RENDER_TAIL,
+        CLIENT_EVENT
     }
 
     public TickTask(long delay, TickAt at) {

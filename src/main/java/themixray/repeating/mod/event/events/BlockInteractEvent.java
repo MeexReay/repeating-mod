@@ -33,7 +33,9 @@ public class BlockInteractEvent extends RecordEvent {
     }
 
     public void replay() {
-        Main.client.interactionManager.interactBlock(Main.client.player, hand, hitResult);
+        if (Main.client.interactionManager != null) {
+            Main.client.interactionManager.interactBlock(Main.client.player, hand, hitResult);
+        }
     }
 
     protected String[] serializeArgs() {

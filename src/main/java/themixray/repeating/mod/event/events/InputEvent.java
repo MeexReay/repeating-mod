@@ -116,33 +116,35 @@ public class InputEvent extends RecordEvent {
     }
 
     public void inputCallback() {
-        if (sprinting != null && Main.client.player.isSprinting() != sprinting)
-            Main.client.player.setSprinting(sprinting);
-        if (Main.client.player.getYaw() != yaw)
-            Main.client.player.setYaw(yaw);
-        if (Main.client.player.getHeadYaw() != head_yaw)
-            Main.client.player.setHeadYaw(head_yaw);
-        if (Main.client.player.getBodyYaw() != body_yaw)
-            Main.client.player.setBodyYaw(body_yaw);
-        if (Main.client.player.getPitch() != pitch)
-            Main.client.player.setPitch(pitch);
-        if (Main.client.player.getMovementSpeed() != speed)
-            Main.client.player.setMovementSpeed(speed);
-        if (sneaking != null && Main.client.player.input.sneaking != sneaking)
-            Main.client.player.input.sneaking = sneaking;
-        if (jumping != null && Main.client.player.input.jumping != jumping)
-            Main.client.player.input.jumping = jumping;
-        if (movementSideways != null && Main.client.player.input.movementSideways != movementSideways)
-            Main.client.player.input.movementSideways = movementSideways;
-        if (movementForward != null && Main.client.player.input.movementForward != movementForward)
-            Main.client.player.input.movementForward = movementForward;
-        if (pressingForward != null && Main.client.player.input.pressingForward != pressingForward)
-            Main.client.player.input.pressingForward = pressingForward;
-        if (pressingBack != null && Main.client.player.input.pressingBack != pressingBack)
-            Main.client.player.input.pressingBack = pressingBack;
-        if (pressingLeft != null && Main.client.player.input.pressingLeft != pressingLeft)
-            Main.client.player.input.pressingLeft = pressingLeft;
-        if (pressingRight != null && Main.client.player.input.pressingRight != pressingRight)
-            Main.client.player.input.pressingRight = pressingRight;
+        if (Main.client.player != null) {
+            if (sprinting != null && Main.client.player.isSprinting() != sprinting)
+                Main.client.player.setSprinting(sprinting);
+            if (Main.client.player.getYaw() != yaw)
+                Main.client.player.setYaw(yaw);
+            if (Main.client.player.getHeadYaw() != head_yaw)
+                Main.client.player.setHeadYaw(head_yaw);
+            if (Main.client.player.getBodyYaw() != body_yaw)
+                Main.client.player.setBodyYaw(body_yaw);
+            if (Main.client.player.getPitch() != pitch)
+                Main.client.player.setPitch(pitch);
+            if (Main.client.player.getMovementSpeed() != speed)
+                Main.client.player.setMovementSpeed(speed);
+            if (sneaking != null && Main.client.player.input.sneaking != sneaking)
+                Main.client.player.input.sneaking = sneaking;
+            if (jumping != null && Main.client.player.input.jumping != jumping)
+                Main.client.player.input.jumping = jumping;
+            if (movementSideways != null && Main.client.player.input.movementSideways != movementSideways)
+                Main.client.player.input.movementSideways = movementSideways;
+            if (movementForward != null && Main.client.player.input.movementForward != movementForward)
+                Main.client.player.input.movementForward = movementForward;
+            if (pressingForward != null && Main.client.player.input.pressingForward != pressingForward)
+                Main.client.player.input.pressingForward = pressingForward;
+            if (pressingBack != null && Main.client.player.input.pressingBack != pressingBack)
+                Main.client.player.input.pressingBack = pressingBack;
+            if (pressingLeft != null && Main.client.player.input.pressingLeft != pressingLeft)
+                Main.client.player.input.pressingLeft = pressingLeft;
+            if (pressingRight != null && Main.client.player.input.pressingRight != pressingRight)
+                Main.client.player.input.pressingRight = pressingRight;
+        }
     }
 }

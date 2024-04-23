@@ -18,6 +18,8 @@ import java.util.UUID;
 public abstract class PlayerMixin {
     @Inject(at = @At(value = "HEAD"), method = "disconnect")
     private void disconnect(Text disconnectReason, CallbackInfo ci) {
-        System.out.println("on client close");
+        if (Main.me.is_replaying) {
+            Main.me.stopReplay();
+        }
     }
 }
