@@ -29,7 +29,9 @@ Releases dont have striked lines
 - ~~select record on import~~
 - ~~change icon in mod menu to new one~~
 - fix "Crashes the game when leaving world while record is replaying"
+- record gui mouse clicks and key pressing
 - create new preview.gif
+- copy file to record list when import
 - practice mode like in geometry dash for parkours
 
 ## How to build
