@@ -18,7 +18,7 @@ Toggle replay     |  not specified
 
 How menu looks like
 
-![Repeating mod menu](https://github.com/MeexReay/repeating-mod/assets/127148610/5af93d22-09ce-4d1c-9f07-f663227da364)
+![repeating mod menu](https://github.com/MeexReay/repeating-mod/assets/127148610/4123068f-b150-45ae-8ae3-fcaa0e6bb9f8)
 
 ## Todo
 Releases dont have striked lines
