@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import themixray.repeating.mod.Main;
-import themixray.repeating.mod.event.RecordBlockBreakEvent;
-import themixray.repeating.mod.event.RecordBlockInteractEvent;
+import themixray.repeating.mod.event.events.BlockBreakEvent;
+import themixray.repeating.mod.event.events.BlockInteractEvent;
 import themixray.repeating.mod.TickTask;
 
 @Mixin(ClientPlayerEntity.class)
@@ -21,13 +21,13 @@ public abstract class MovementMixin {
 	private void init(CallbackInfo ci) {
 		PlayerBlockBreakEvents.AFTER.register((world, player, pos, blockState, blockEntity) -> {
 			if (Main.me.is_recording)
-				Main.me.recordTick(new RecordBlockBreakEvent(pos));
+				Main.me.recordTick(new BlockBreakEvent(pos));
 		});
 
 		UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
 			if (hitResult.getType().equals(HitResult.Type.BLOCK))
 				if (Main.me.is_recording)
-					Main.me.recordTick(new RecordBlockInteractEvent(hand,hitResult));
+					Main.me.recordTick(new BlockInteractEvent(hand,hitResult));
 			return ActionResult.PASS;
 		});
 	}

@@ -1,32 +1,33 @@
-package themixray.repeating.mod.event;
+package themixray.repeating.mod.event.events;
 
 import net.minecraft.util.math.BlockPos;
 import themixray.repeating.mod.Main;
+import themixray.repeating.mod.event.RecordEvent;
 
-public class RecordBlockBreakEvent extends RecordEvent {
+public class BlockBreakEvent extends RecordEvent {
     public BlockPos pos;
 
-    public static RecordBlockBreakEvent fromArgs(String[] a) {
-        return new RecordBlockBreakEvent(new BlockPos(
+    public BlockBreakEvent(
+            BlockPos pos) {
+        this.pos = pos;
+    }
+
+    public static BlockBreakEvent deserialize(String[] a) {
+        return new BlockBreakEvent(new BlockPos(
                 Integer.parseInt(a[0]),
                 Integer.parseInt(a[1]),
                 Integer.parseInt(a[2])));
     }
 
-    public RecordBlockBreakEvent(
-            BlockPos pos) {
-        this.pos = pos;
+    protected String[] serializeArgs() {
+        return new String[]{
+                String.valueOf(pos.getX()),
+                String.valueOf(pos.getY()),
+                String.valueOf(pos.getZ())
+        };
     }
 
     public void replay() {
         Main.client.interactionManager.breakBlock(pos);
-    }
-
-    public String serialize() {
-        return "b=" + pos.getX() + "&" + pos.getY() + "&" + pos.getZ();
-    }
-
-    public String getType() {
-        return "block_break";
     }
 }

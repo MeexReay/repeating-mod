@@ -1,13 +1,15 @@
-package themixray.repeating.mod.event;
+package themixray.repeating.mod.event.events;
 
-public class RecordDelayEvent extends RecordEvent {
+import themixray.repeating.mod.event.RecordEvent;
+
+public class DelayEvent extends RecordEvent {
     public long delay;
 
-    public static RecordDelayEvent fromArgs(String[] a) {
-        return new RecordDelayEvent(Long.parseLong(a[0]));
+    public static DelayEvent deserialize(String[] a) {
+        return new DelayEvent(Long.parseLong(a[0]));
     }
 
-    public RecordDelayEvent(long delay) {
+    public DelayEvent(long delay) {
         this.delay = delay;
     }
 
@@ -19,11 +21,9 @@ public class RecordDelayEvent extends RecordEvent {
         }
     }
 
-    public String serialize() {
-        return "d=" + delay;
-    }
-
-    public String getType() {
-        return "delay";
+    protected String[] serializeArgs() {
+        return new String[]{
+                String.valueOf(delay)
+        };
     }
 }

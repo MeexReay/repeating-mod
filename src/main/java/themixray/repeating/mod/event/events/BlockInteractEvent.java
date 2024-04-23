@@ -1,4 +1,4 @@
-package themixray.repeating.mod.event;
+package themixray.repeating.mod.event.events;
 
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -6,13 +6,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import themixray.repeating.mod.Main;
+import themixray.repeating.mod.event.RecordEvent;
 
-public class RecordBlockInteractEvent extends RecordEvent {
+public class BlockInteractEvent extends RecordEvent {
     public Hand hand;
     public BlockHitResult hitResult;
 
-    public static RecordBlockInteractEvent fromArgs(String[] a) {
-        return new RecordBlockInteractEvent(
+    public static BlockInteractEvent deserialize(String[] a) {
+        return new BlockInteractEvent(
                 Hand.valueOf(a[5]),
                 new BlockHitResult(new Vec3d(
                         Double.parseDouble(a[0]),
@@ -26,7 +27,7 @@ public class RecordBlockInteractEvent extends RecordEvent {
                         a[3].equals("1")));
     }
 
-    public RecordBlockInteractEvent(Hand hand, BlockHitResult hitResult) {
+    public BlockInteractEvent(Hand hand, BlockHitResult hitResult) {
         this.hand = hand;
         this.hitResult = hitResult;
     }
@@ -35,12 +36,14 @@ public class RecordBlockInteractEvent extends RecordEvent {
         Main.client.interactionManager.interactBlock(Main.client.player, hand, hitResult);
     }
 
-    public String serialize() {
-        return "i=" + hitResult.getBlockPos().getX() + "&" + hitResult.getBlockPos().getY() + "&" + hitResult.getBlockPos().getZ() +
-                "&" + (hitResult.isInsideBlock() ? "1" : "0") + "&" + hitResult.getSide().getId() + "&" + hand.name();
-    }
-
-    public String getType() {
-        return "block_interact";
+    protected String[] serializeArgs() {
+        return new String[]{
+                String.valueOf(hitResult.getBlockPos().getX()),
+                String.valueOf(hitResult.getBlockPos().getY()),
+                String.valueOf(hitResult.getBlockPos().getZ()),
+                (hitResult.isInsideBlock() ? "1" : "0"),
+                String.valueOf(hitResult.getSide().getId()),
+                hand.name()
+        };
     }
 }

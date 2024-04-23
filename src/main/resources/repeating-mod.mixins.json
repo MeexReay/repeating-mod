@@ -10,7 +10,9 @@
     "InputMixin",
     "RendererMixin",
     "EntityMixin",
-    "ClientMixin"
+    "ClientMixin",
+    "ScreenMixin",
+    "PlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

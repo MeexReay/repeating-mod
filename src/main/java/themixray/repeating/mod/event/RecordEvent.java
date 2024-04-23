@@ -1,28 +1,22 @@
 package themixray.repeating.mod.event;
 
+import themixray.repeating.mod.event.events.*;
+
 public abstract class RecordEvent {
     public abstract void replay();
-    public abstract String serialize();
-    public abstract String getType();
-
-    public static RecordEvent deserialize(String t) {
-        try {
-            String type = String.valueOf(t.charAt(0));
-            String[] args = t.substring(2).split("&");
-            if (type.equals("d")) {
-                return RecordDelayEvent.fromArgs(args);
-            } else if (type.equals("m")) {
-                return RecordMoveEvent.fromArgs(args);
-            } else if (type.equals("p")) {
-                return RecordInputEvent.fromArgs(args);
-            } else if (type.equals("b")) {
-                return RecordBlockBreakEvent.fromArgs(args);
-            } else if (type.equals("i")) {
-                return RecordBlockInteractEvent.fromArgs(args);
+    public RecordEventType getType() {
+        for (RecordEventType ev : RecordEventType.values()) {
+            if (ev.getEventClass().equals(this.getClass())) {
+                return ev;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return null;
+    }
+    protected abstract String[] serializeArgs();
+    public String serialize() {
+        return getType().getChar() + "=" + String.join("&", serializeArgs());
+    }
+    public static RecordEvent deserialize(String t) {
+        return RecordEventType.getByChar(t.charAt(0)).deserialize(t.substring(2).split("&"));
     }
 }

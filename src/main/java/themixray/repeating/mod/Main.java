@@ -15,10 +15,10 @@ import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import themixray.repeating.mod.event.RecordDelayEvent;
+import themixray.repeating.mod.event.events.DelayEvent;
 import themixray.repeating.mod.event.RecordEvent;
-import themixray.repeating.mod.event.RecordInputEvent;
-import themixray.repeating.mod.event.RecordMoveEvent;
+import themixray.repeating.mod.event.events.InputEvent;
+import themixray.repeating.mod.event.events.MoveEvent;
 import themixray.repeating.mod.render.RenderHelper;
 import themixray.repeating.mod.render.RenderSystem;
 import themixray.repeating.mod.render.buffer.WorldBuffer;
@@ -45,7 +45,7 @@ public class Main implements ClientModInitializer {
 	public TickTask replay_tick = null;
 	public boolean is_replaying = false;
 	public boolean loop_replay = false;
-	public static RecordInputEvent input_replay = null;
+	public static InputEvent input_replay = null;
 
 	public long living_ticks = 0;
 
@@ -169,7 +169,7 @@ public class Main implements ClientModInitializer {
 		now_record = record_list.newRecord();
 
 		Vec3d start_pos = client.player.getPos();
-		now_record.addEvent(new RecordMoveEvent(start_pos,client.player.getHeadYaw(),client.player.getPitch()));
+		now_record.addEvent(new MoveEvent(start_pos,client.player.getHeadYaw(),client.player.getPitch()));
 		now_record.setStartRecordPos(start_pos);
 
 		if (record_pos_delay > 0) {
@@ -178,7 +178,7 @@ public class Main implements ClientModInitializer {
 					record_pos_delay) {
 				@Override
 				public void run() {
-					now_record.addEvent(new RecordMoveEvent(client.player.getPos(),
+					now_record.addEvent(new MoveEvent(client.player.getPos(),
 							client.player.getHeadYaw(), client.player.getPitch()));
 				}
 			};
@@ -192,7 +192,7 @@ public class Main implements ClientModInitializer {
 			long now = living_ticks;
 			if (last_record != -1) {
 				long diff = now - last_record - 2;
-				if (diff > 0) now_record.addEvent(new RecordDelayEvent(diff));
+				if (diff > 0) now_record.addEvent(new DelayEvent(diff));
 			}
 			now_record.addEvent(e);
 			last_record = now;
@@ -205,9 +205,9 @@ public class Main implements ClientModInitializer {
 			return;
 		}
 
-		RecordInputEvent l = ((RecordInputEvent) now_record.getLastEvent("input"));
+		InputEvent l = ((InputEvent) now_record.getLastEvent("input"));
 		if (l == null) {
-			RecordInputEvent e = new RecordInputEvent(
+			InputEvent e = new InputEvent(
 				client.player.input.sneaking,
 				client.player.input.jumping,
 				client.player.input.movementSideways,
@@ -224,7 +224,7 @@ public class Main implements ClientModInitializer {
 				client.player.getMovementSpeed());
 			recordTick(e);
 		} else {
-			RecordInputEvent e = new RecordInputEvent(
+			InputEvent e = new InputEvent(
 				((Boolean) client.player.input.sneaking == l.sneaking) ? null : client.player.input.sneaking,
 				((Boolean) client.player.input.jumping == l.jumping) ? null : client.player.input.jumping,
 				(((Float) client.player.input.movementSideways).equals(l.movementSideways)) ? null : client.player.input.movementSideways,
@@ -280,8 +280,8 @@ public class Main implements ClientModInitializer {
 			public void run() {
 				if (!is_replaying) cancel();
 				RecordEvent e = events.get(replay_index);
-				if (e instanceof RecordDelayEvent) {
-					setDelay(((RecordDelayEvent) e).delay);
+				if (e instanceof DelayEvent) {
+					setDelay(((DelayEvent) e).delay);
 				} else {
 					e.replay();
 				}

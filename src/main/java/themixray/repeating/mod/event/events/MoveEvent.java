@@ -1,16 +1,17 @@
-package themixray.repeating.mod.event;
+package themixray.repeating.mod.event.events;
 
 import net.minecraft.entity.MovementType;
 import net.minecraft.util.math.Vec3d;
 import themixray.repeating.mod.Main;
+import themixray.repeating.mod.event.RecordEvent;
 
-public class RecordMoveEvent extends RecordEvent {
+public class MoveEvent extends RecordEvent {
     public Vec3d vec;
     public float yaw;
     public float pitch;
 
-    public static RecordMoveEvent fromArgs(String[] a) {
-        return new RecordMoveEvent(new Vec3d(
+    public static MoveEvent deserialize(String[] a) {
+        return new MoveEvent(new Vec3d(
                 Double.parseDouble(a[0]),
                 Double.parseDouble(a[1]),
                 Double.parseDouble(a[2])),
@@ -18,7 +19,7 @@ public class RecordMoveEvent extends RecordEvent {
                 Float.parseFloat(a[4]));
     }
 
-    public RecordMoveEvent(Vec3d vec, float yaw, float pitch) {
+    public MoveEvent(Vec3d vec, float yaw, float pitch) {
         this.vec = vec;
         this.yaw = yaw;
         this.pitch = pitch;
@@ -32,11 +33,12 @@ public class RecordMoveEvent extends RecordEvent {
         Main.client.player.setPitch(pitch);
     }
 
-    public String serialize() {
-        return "m=" + vec.getX() + "&" + vec.getY() + "&" + vec.getZ() + "&" + yaw + "&" + pitch;
-    }
-
-    public String getType() {
-        return "move";
+    protected String[] serializeArgs() {
+        return new String[]{
+                String.valueOf(vec.getX()),
+                String.valueOf(vec.getZ()),
+                String.valueOf(yaw),
+                String.valueOf(pitch)
+        };
     }
 }
