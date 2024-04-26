@@ -6,7 +6,7 @@ public abstract class RecordEvent {
     public abstract void replay();
     public RecordEventType getType() {
         for (RecordEventType ev : RecordEventType.values()) {
-            if (ev.getEventClass().equals(this.getClass())) {
+            if (ev.getEventClass().getTypeName().equals(this.getClass().getTypeName())) {
                 return ev;
             }
         }

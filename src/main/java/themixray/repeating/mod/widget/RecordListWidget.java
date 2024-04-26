@@ -14,11 +14,12 @@ import themixray.repeating.mod.RecordState;
 import themixray.repeating.mod.RepeatingScreen;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class RecordListWidget extends ScrollableWidget {
-    private List<RecordWidget> widgets = new ArrayList<>();
+    private LinkedList<RecordWidget> widgets = new LinkedList<>();
     private boolean focused = false;
 
     public RecordListWidget(int x, int y, int width, int height) {

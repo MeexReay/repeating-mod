@@ -6,6 +6,8 @@ import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.*;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
+import net.minecraft.util.Formatting;
 import themixray.repeating.mod.Main;
 import themixray.repeating.mod.RecordState;
 import themixray.repeating.mod.RenderListener;
@@ -43,7 +45,10 @@ public class RecordWidget implements Drawable, Widget {
     }
 
     public boolean contains(int x, int y) {
-        return parent.getX() + getX() <= x && parent.getY() + getY() <= y && x <= parent.getX() + getX() + getWidth() && y <= parent.getY() + getY() + getHeight();
+        return parent.getX() + getX() <= x &&
+                parent.getY() + getY() <= y &&
+                x <= parent.getX() + getX() + getWidth() &&
+                y <= parent.getY() + getY() + getHeight();
     }
 
     public void setX(int x) {
@@ -105,6 +110,11 @@ public class RecordWidget implements Drawable, Widget {
         children.add(delete_button);
 
         ButtonWidget export_button = ButtonWidget.builder(Text.translatable("text.repeating-mod.export"), (i) -> {
+            try {
+                record.save();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             if (Desktop.isDesktopSupported()) {
                 Desktop desk = Desktop.getDesktop();
                 try {
@@ -116,6 +126,9 @@ public class RecordWidget implements Drawable, Widget {
                         throw new RuntimeException(ex);
                     }
                 }
+            } else {
+                Main.sendMessage(Text.literal("Record file is ").append(
+                        Text.literal("["+record.getFile().getAbsolutePath()+"]").styled((s) -> s.withColor(Formatting.GRAY))));
             }
         }).dimensions(parent.getX() + getX() + 110,parent.getY() + getY() + 4 + 14, 65, 13).build();
 
@@ -124,11 +137,15 @@ public class RecordWidget implements Drawable, Widget {
         ButtonWidget replay_button = ButtonWidget.builder(Text.translatable("text.repeating-mod.start"), (i) -> {
             if (Main.me.is_replaying) {
                 Main.me.stopReplay();
+                if (getRecord().equals(Main.me.now_record)) {
+                    return;
+                }
             }
 
             i.setMessage(Text.translatable("text.repeating-mod.stop"));
             Main.me.now_record = record;
             Main.me.startReplay();
+            Main.client.setScreen(null);
         }).dimensions(parent.getX() + getX() + 110,parent.getY() + getY() + 4 + 28, 65, 13)
                 .tooltip(Tooltip.of(Text.translatable("text.repeating-mod.replay_tooltip"))).build();
 

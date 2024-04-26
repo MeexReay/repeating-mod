@@ -316,7 +316,12 @@ public class Main implements ClientModInitializer {
 			replay_tick.cancel();
 			replay_tick = null;
 		}
-		menu.updateButtons();
+        try {
+            now_record.save();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        menu.updateButtons();
 		record_list.getWidget().getWidget(now_record).getChildren().get(3).setMessage(Text.translatable("text.repeating-mod.start"));
 		sendMessage(Text.translatable("message.repeating-mod.replay_stop"));
 	}

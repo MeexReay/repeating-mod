@@ -7,18 +7,16 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class RecordList {
     private final File folder;
-    private List<RecordState> records;
+    private LinkedList<RecordState> records;
     private RecordListWidget widget;
 
     public RecordList(File folder) {
         this.folder = folder;
-        this.records = new ArrayList<>();
+        this.records = new LinkedList<>();
         this.widget = new RecordListWidget(0, 0, 180, 200);
     }
 
@@ -35,7 +33,11 @@ public class RecordList {
     }
 
     public void loadRecords() {
-        for (File file : folder.listFiles()) {
+        LinkedList<File> files = new LinkedList<>(List.of(folder.listFiles()));
+
+        files.sort(Comparator.comparingLong((f) -> f.lastModified()));
+
+        for (File file : files) {
             try {
                 addRecord(file);
             } catch (Exception e) {}

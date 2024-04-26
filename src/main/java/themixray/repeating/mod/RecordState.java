@@ -101,7 +101,7 @@ public class RecordState {
 
     public RecordEvent getLastEvent(String type) {
         for (RecordEvent r: Lists.reverse(new ArrayList<>(events))) {
-            if (r.getType().getName().equals(type)) {
+            if (r.getType() != null && r.getType().getName().equals(type)) {
                 return r;
             }
         }
