@@ -1,3 +1,6 @@
+> [!WARNING]
+> Migrated to my selfhost [Gitea](https://git.meex.lol/MeexReay/repeating_mod)
+
 # Repeating Mod (Fabric)
 
 This mod can record your movements and play them back.
